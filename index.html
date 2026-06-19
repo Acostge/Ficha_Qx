@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ficha Qx - Panel Médico</title>
+    <title>PIEMCA - Ficha Qx</title>
+    
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#083264">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --primary-color: #1e3a8a;
-            --accent-color: #3b82f6;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border-radius: 14px;
+            --piemca-bg: #f4f8fb;
+            --piemca-card: #ffffff;
+            --piemca-blue-light: #007cc2; /* Azul del logo PIEMCA */
+            --piemca-blue-dark: #083264;  /* Azul oscuro complementario */
+            --piemca-text-main: #0c1e36;
+            --piemca-text-muted: #5c728a;
+            --piemca-border-radius: 16px;
         }
 
         * {
@@ -24,40 +30,57 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 16px;
-            padding-bottom: 40px;
+            background-color: var(--piemca-bg);
+            color: var(--piemca-text-main);
         }
 
         .app-container {
-            max-width: 500px;
+            max-width: 480px;
             margin: 0 auto;
+            padding: 0 16px 40px 16px;
+        }
+
+        /* ENCABEZADO FIJO / STICKY CONTROLLER */
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: var(--piemca-bg);
+            padding-top: 16px;
+            padding-bottom: 10px;
+            z-index: 90;
+            /* Degradado sutil inferior para indicar que el contenido pasa por debajo */
+            border-bottom: 1px solid rgba(8, 50, 100, 0.05);
+            box-shadow: 0 8px 20px -8px rgba(8, 50, 100, 0.05);
         }
 
         header {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             text-align: center;
         }
 
         header h1 {
             font-size: 1.4rem;
-            color: var(--primary-color);
-            font-weight: 700;
+            color: var(--piemca-blue-dark);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            text-transform: uppercase;
         }
 
         header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 4px;
+            font-size: 0.8rem;
+            color: var(--piemca-text-muted);
+            margin-top: 2px;
+            font-weight: 500;
         }
 
         .selector-card {
-            background: var(--card-bg);
+            background: var(--piemca-card);
             padding: 16px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            margin-bottom: 16px;
+            border-radius: var(--piemca-border-radius);
+            box-shadow: 0 4px 20px rgba(8, 50, 100, 0.04);
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 124, 194, 0.06);
         }
 
         .form-group {
@@ -70,68 +93,85 @@
 
         label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.7rem;
+            font-weight: 700;
             text-transform: uppercase;
-            color: var(--text-muted);
+            color: var(--piemca-blue-dark);
             margin-bottom: 6px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
         select {
             width: 100%;
             padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            background-color: #f9fafb;
-            font-size: 1rem;
-            color: var(--text-main);
+            border: 1.5px solid #e1e9f0;
+            border-radius: 12px;
+            background-color: #fafcfe;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--piemca-text-main);
             outline: none;
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007cc2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 16px;
+            background-position: right 14px center;
+            background-size: 14px;
+            transition: all 0.25s ease;
+        }
+
+        select:focus {
+            border-color: var(--piemca-blue-light);
+            box-shadow: 0 0 0 3px rgba(0, 124, 194, 0.12);
+            background-color: #ffffff;
         }
 
         .metric-badge {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            background: linear-gradient(135deg, var(--piemca-blue-dark), var(--piemca-blue-light));
             color: white;
-            padding: 20px;
-            border-radius: var(--border-radius);
+            padding: 16px;
+            border-radius: var(--piemca-border-radius);
             text-align: center;
-            margin-bottom: 16px;
-            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 6px 18px rgba(0, 124, 194, 0.15);
         }
 
         .metric-badge h2 {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: 800;
+            line-height: 1;
         }
 
         .metric-badge p {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             opacity: 0.9;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 2px;
+            margin-top: 4px;
+            font-weight: 700;
+        }
+
+        /* ÁREA DE SCROLL (ZONA DE GRÁFICOS) */
+        .scrollable-content {
+            margin-top: 16px;
         }
 
         .chart-card {
-            background: var(--card-bg);
-            padding: 16px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: var(--piemca-card);
+            padding: 20px;
+            border-radius: var(--piemca-border-radius);
+            box-shadow: 0 4px 20px rgba(8, 50, 100, 0.03);
             margin-bottom: 16px;
+            border: 1px solid rgba(8, 50, 100, 0.02);
         }
 
         .chart-card h3 {
-            font-size: 1rem;
-            color: var(--primary-color);
-            margin-bottom: 14px;
-            font-weight: 600;
-            border-left: 4px solid var(--accent-color);
-            padding-left: 8px;
+            font-size: 0.9rem;
+            color: var(--piemca-blue-dark);
+            margin-bottom: 16px;
+            font-weight: 700;
+            border-left: 4px solid var(--piemca-blue-light);
+            padding-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .chart-container {
@@ -143,7 +183,7 @@
         #loading-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--piemca-bg);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -152,12 +192,12 @@
         }
 
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--accent-color);
+            border: 4px solid #e1e9f0;
+            border-top: 4px solid var(--piemca-blue-light);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+            width: 44px;
+            height: 44px;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -172,37 +212,42 @@
 
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <p style="margin-top: 12px; font-weight: 500; color: var(--primary-color);">Cargando base de datos...</p>
+        <p style="margin-top: 14px; font-weight: 600; color: var(--piemca-blue-dark); font-size: 0.9rem; letter-spacing: 0.5px;">PIEMCA DATA CONNECT...</p>
     </div>
 
     <div class="app-container">
-        <header>
-            <h1>📊 Ficha Quirúrgica Digital</h1>
-            <p>Análisis de Procedimientos Concretados</p>
-        </header>
+        
+        <div class="sticky-header">
+            <header>
+                <h1>PIEMCA</h1>
+                <p>Ficha Quirúrgica Inteligente</p>
+            </header>
 
-        <div class="selector-card">
-            <div class="form-group">
-                <label for="select-doctor">Médico / Especialista</label>
-                <select id="select-doctor">
-                    <option value="">Seleccione un doctor...</option>
-                </select>
+            <div class="selector-card">
+                <div class="form-group">
+                    <label for="select-doctor">Médico / Especialista</label>
+                    <select id="select-doctor">
+                        <option value="">Seleccione un doctor...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="select-anio">Año Fiscal</label>
+                    <select id="select-anio" disabled>
+                        <option value="">Seleccione el año...</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="select-anio">Año Fiscal</label>
-                <select id="select-anio" disabled>
-                    <option value="">Seleccione el año...</option>
-                </select>
+
+            <div id="badge-container" class="hidden">
+                <div class="metric-badge">
+                    <h2 id="txt-total">0</h2>
+                    <p>Cirugías Realizadas</p>
+                </div>
             </div>
         </div>
 
-        <div id="dashboard-content" class="hidden">
+        <div id="dashboard-content" class="scrollable-content hidden">
             
-            <div class="metric-badge">
-                <h2 id="txt-total">0</h2>
-                <p>Cirugías Realizadas</p>
-            </div>
-
             <div class="chart-card">
                 <h3>Total de Procedimientos por Línea</h3>
                 <div class="chart-container">
@@ -226,7 +271,7 @@
 
             <div class="chart-card">
                 <h3>Sub-líneas e Implantes Colocados</h3>
-                <div class="chart-container" style="height: 260px;">
+                <div class="chart-container" style="height: 280px;">
                     <canvas id="chart-sublineas"></canvas>
                 </div>
             </div>
@@ -235,20 +280,18 @@
     </div>
 
     <script>
-        // URL de tu conector de Google Apps Script
         const API_URL = "https://script.google.com/macros/s/AKfycbwwNKsZvkX-7JJwR7rTcrwioOlH4qpKGPYog8t9ZiTwNJoeKdUhGg2U5sP4IYXhSVdwbA/exec";
         
         let bdData = {};
         let chartsInstance = {};
 
-        // Elementos DOM
         const selectDoctor = document.getElementById('select-doctor');
         const selectAnio = document.getElementById('select-anio');
         const dashboardContent = document.getElementById('dashboard-content');
+        const badgeContainer = document.getElementById('badge-container');
         const loadingOverlay = document.getElementById('loading-overlay');
         const txtTotal = document.getElementById('txt-total');
 
-        // Inicializar la carga de datos al abrir la app
         window.addEventListener('DOMContentLoaded', cargarDatos);
 
         async function cargarDatos() {
@@ -257,11 +300,10 @@
                 bdData = await response.json();
                 
                 if(bdData.error) {
-                    alert("Error desde el backend: " + bdData.error);
+                    alert("Error: " + bdData.error);
                     return;
                 }
 
-                // Poblar select de Doctores ordenado alfabéticamente
                 const listaDoctores = Object.keys(bdData).sort();
                 listaDoctores.forEach(doc => {
                     let opt = document.createElement('option');
@@ -272,140 +314,197 @@
 
                 loadingOverlay.classList.add('hidden');
             } catch (error) {
-                console.error("Error cargando el JSON:", error);
-                alert("No se pudo conectar con la base de datos de Google Sheets. Verifica los permisos de tu Apps Script.");
+                console.error("Error:", error);
+                alert("Fallo de conexión de datos.");
             }
         }
 
-        // Evento cuando cambia el Doctor
         selectDoctor.addEventListener('change', () => {
             const docSel = selectDoctor.value;
             selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
             dashboardContent.classList.add('hidden');
+            badgeContainer.classList.add('hidden');
             
             if(!docSel) {
                 selectAnio.disabled = true;
                 return;
             }
 
-            // Poblar los años disponibles para el doctor seleccionado
-            const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a); // Más reciente primero
+            const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a);
             aniosDisponibles.forEach(anio => {
-                let opt = document.createElement('option');
-                opt.value = r = anio;
-                opt.textContent = anio;
-                selectAnio.appendChild(opt);
+                if(anio !== "S/A") {
+                    let opt = document.createElement('option');
+                    opt.value = anio;
+                    opt.textContent = anio;
+                    selectAnio.appendChild(opt);
+                }
             });
             
             selectAnio.disabled = false;
         });
 
-        // Evento cuando cambia el Año
         selectAnio.addEventListener('change', () => {
             const docSel = selectDoctor.value;
             const anioSel = selectAnio.value;
 
             if(!docSel || !anioSel) {
                 dashboardContent.classList.add('hidden');
+                badgeContainer.classList.add('hidden');
                 return;
             }
 
             renderizarDashboard(bdData[docSel][anioSel]);
         });
 
-        function renderizarDashboard(dataAnio) {
-            dashboardContent.classList.remove('hidden');
-            
-            // 1. Total Central
-            txtTotal.textContent = dataAnio.totalCirugias;
+function renderizarDashboard(dataAnio) {
+    dashboardContent.classList.remove('hidden');
+    badgeContainer.classList.remove('hidden');
+    txtTotal.textContent = dataAnio.totalCirugias;
 
-            // Destruir instancias previas de gráficos para evitar superposiciones visuales
-            Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
+    Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
 
-            // 2. Gráfico de Líneas (Barras Horizontales para mejor lectura móvil)
-            const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
-            chartsInstance.lineas = new Chart(ctxLineas, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(dataAnio.porLineas || dataAnio.porLinea),
-                    datasets: [{
-                        label: 'Procedimientos',
-                        data: Object.values(dataAnio.porLineas || dataAnio.porLinea),
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
-            });
+    // ==========================================
+    // AJUSTE PRECISO: FILTRADO DE LÍNEAS PRINCIPALES (OCULTANDO 0)
+    // ==========================================
+    const LINEAS_OFICIALES = [
+        "Artroscopia",
+        "Prótesis de Rodilla",
+        "Prótesis de Cadera",
+        "Prótesis de Hombro",
+        "Cirugía de Mano",
+        "Prótesis de Mano",
+        "Cirugía de Pie",
+        "Osteosíntesis",
+        "Columna",
+        "Máxilofacial"
+    ];
 
-            // 3. Gráfico Evolución Mensual (Barras Verticales)
-            const ctxMeses = document.getElementById('chart-meses').getContext('2d');
-            chartsInstance.meses = new Chart(ctxMeses, {
-                type: 'bar',
-                data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                    datasets: [{
-                        data: dataAnio.porMes,
-                        backgroundColor: '#1e3a8a',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
-            });
+    const dataLineasCruda = dataAnio.porLineas || dataAnio.porLinea || {};
+    let labelsLineasFiltradas = [];
+    let valoresLineasFiltrados = [];
 
-            // 4. Gráfico Género (Anillo / Doughnut)
-            const ctxGenero = document.getElementById('chart-genero').getContext('2d');
-            chartsInstance.genero = new Chart(ctxGenero, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Femenino (F)', 'Masculino (M)'],
-                    datasets: [{
-                        data: [dataAnio.porSexo.F, dataAnio.porSexo.M],
-                        backgroundColor: ['#ec4899', '#06b6d4']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'right' } }
-                }
-            });
-
-            // 5. Gráfico de Sub-líneas (Modelos de Implantes - Barras Horizontales)
-            const ctxSub = document.getElementById('chart-sublineas').getContext('2d');
-            
-            // Ordenar de mayor a menor uso para que se vea más limpio
-            const subLineasOrdenadas = Object.entries(dataAnio.porSubLinea)
-                                             .sort((a, b) => b[1] - a[1])
-                                             .slice(0, 8); // Top 8 implantes más puestos
-
-            chartsInstance.sublineas = new Chart(ctxSub, {
-                type: 'bar',
-                data: {
-                    labels: subLineasOrdenadas.map(item => item[0]),
-                    datasets: [{
-                        data: subLineasOrdenadas.map(item => item[1]),
-                        backgroundColor: '#10b981',
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
-            });
+    // Evaluamos solo las oficiales y excluimos si el valor es 0
+    LINEAS_OFICIALES.forEach(linea => {
+        const valor = dataLineasCruda[linea] || 0;
+        if (valor > 0) {
+            labelsLineasFiltradas.push(linea);
+            valoresLineasFiltrados.push(valor);
         }
+    });
+
+    // 1. Gráfico de Líneas Corregido
+    const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
+    chartsInstance.lineas = new Chart(ctxLineas, {
+        type: 'bar',
+        data: {
+            labels: labelsLineasFiltradas,
+            datasets: [{
+                data: valoresLineasFiltrados,
+                backgroundColor: '#007cc2',
+                borderRadius: 6,
+                barThickness: 14
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+        }
+    });
+
+    // 2. Evolución Mensual (Corregido para forzar números enteros limpios)
+    const ctxMeses = document.getElementById('chart-meses').getContext('2d');
+    chartsInstance.meses = new Chart(ctxMeses, {
+        type: 'bar',
+        data: {
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            datasets: [{
+                data: dataAnio.porMes,
+                backgroundColor: '#083264',
+                borderRadius: 5,
+                barThickness: 14
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { 
+                x: { grid: { display: false } }, 
+                y: { 
+                    grid: { display: false },
+                    ticks: {
+                        // Fuerza a que solo se muestren números enteros en el eje
+                        precision: 0,
+                        callback: function(value) {
+                            if (value % 1 === 0) { return value; }
+                        }
+                    }
+                } 
+            }
+        }
+    });
+
+	// 3. Género (Corregido con colores representativos e iconos estéticos)
+    const ctxGenero = document.getElementById('chart-genero').getContext('2d');
+    chartsInstance.genero = new Chart(ctxGenero, {
+        type: 'doughnut',
+        data: {
+            labels: ['🚺 F', '🚹 M'],
+            datasets: [{
+                data: [dataAnio.porSexo.F, dataAnio.porSexo.M],
+                backgroundColor: ['#ff6b8b', '#007cc2'], // Rosado estético y Azul claro PIEMCA
+                borderWidth: 3,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { 
+                    position: 'right', 
+                    labels: { 
+                        boxWidth: 14, 
+                        font: { 
+                            weight: 'bold',
+                            size: 14
+                        },
+                        padding: 15
+                    } 
+                } 
+            }
+        }
+    });
+
+    // 4. Sub-líneas e Implantes (Se mantiene intacto el Top automático que te gustaba)
+    const ctxSub = document.getElementById('chart-sublineas').getContext('2d');
+    const subLineasOrdenadas = Object.entries(dataAnio.porSubLinea || {})
+                                     .sort((a, b) => b[1] - a[1])
+                                     .slice(0, 8);
+
+    chartsInstance.sublineas = new Chart(ctxSub, {
+        type: 'bar',
+        data: {
+            labels: subLineasOrdenadas.map(item => item[0]),
+            datasets: [{
+                data: subLineasOrdenadas.map(item => item[1]),
+                backgroundColor: '#5c728a',
+                borderRadius: 6,
+                barThickness: 12
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+        }
+    });
+}
     </script>
 </body>
 </html>

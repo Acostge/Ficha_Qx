@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ficha Qx - Panel Médico</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --primary-color: #1e3a8a;
+            --accent-color: #3b82f6;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px;
+            padding-bottom: 40px;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .selector-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background-color: #f9fafb;
+            font-size: 1rem;
+            color: var(--text-main);
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        .metric-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+        }
+
+        .metric-badge h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .metric-badge p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .chart-card h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 14px;
+            font-weight: 600;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 8px;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 230px;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p style="margin-top: 12px; font-weight: 500; color: var(--primary-color);">Cargando base de datos...</p>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <h1>📊 Ficha Quirúrgica Digital</h1>
+            <p>Análisis de Procedimientos Concretados</p>
+        </header>
+
+        <div class="selector-card">
+            <div class="form-group">
+                <label for="select-doctor">Médico / Especialista</label>
+                <select id="select-doctor">
+                    <option value="">Seleccione un doctor...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="select-anio">Año Fiscal</label>
+                <select id="select-anio" disabled>
+                    <option value="">Seleccione el año...</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="dashboard-content" class="hidden">
+            
+            <div class="metric-badge">
+                <h2 id="txt-total">0</h2>
+                <p>Cirugías Realizadas</p>
+            </div>
+
+            <div class="chart-card">
+                <h3>Total de Procedimientos por Línea</h3>
+                <div class="chart-container">
+                    <canvas id="chart-lineas"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Evolución Mensual</h3>
+                <div class="chart-container">
+                    <canvas id="chart-meses"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Procedimientos por Género</h3>
+                <div class="chart-container" style="height: 200px;">
+                    <canvas id="chart-genero"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Sub-líneas e Implantes Colocados</h3>
+                <div class="chart-container" style="height: 260px;">
+                    <canvas id="chart-sublineas"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // URL de tu conector de Google Apps Script
+        const API_URL = "https://script.google.com/macros/s/AKfycbwwNKsZvkX-7JJwR7rTcrwioOlH4qpKGPYog8t9ZiTwNJoeKdUhGg2U5sP4IYXhSVdwbA/exec";
+        
+        let bdData = {};
+        let chartsInstance = {};
+
+        // Elementos DOM
+        const selectDoctor = document.getElementById('select-doctor');
+        const selectAnio = document.getElementById('select-anio');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const txtTotal = document.getElementById('txt-total');
+
+        // Inicializar la carga de datos al abrir la app
+        window.addEventListener('DOMContentLoaded', cargarDatos);
+
+        async function cargarDatos() {
+            try {
+                const response = await fetch(API_URL);
+                bdData = await response.json();
+                
+                if(bdData.error) {
+                    alert("Error desde el backend: " + bdData.error);
+                    return;
+                }
+
+                // Poblar select de Doctores ordenado alfabéticamente
+                const listaDoctores = Object.keys(bdData).sort();
+                listaDoctores.forEach(doc => {
+                    let opt = document.createElement('option');
+                    opt.value = doc;
+                    opt.textContent = doc;
+                    selectDoctor.appendChild(opt);
+                });
+
+                loadingOverlay.classList.add('hidden');
+            } catch (error) {
+                console.error("Error cargando el JSON:", error);
+                alert("No se pudo conectar con la base de datos de Google Sheets. Verifica los permisos de tu Apps Script.");
+            }
+        }
+
+        // Evento cuando cambia el Doctor
+        selectDoctor.addEventListener('change', () => {
+            const docSel = selectDoctor.value;
+            selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
+            dashboardContent.classList.add('hidden');
+            
+            if(!docSel) {
+                selectAnio.disabled = true;
+                return;
+            }
+
+            // Poblar los años disponibles para el doctor seleccionado
+            const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a); // Más reciente primero
+            aniosDisponibles.forEach(anio => {
+                let opt = document.createElement('option');
+                opt.value = r = anio;
+                opt.textContent = anio;
+                selectAnio.appendChild(opt);
+            });
+            
+            selectAnio.disabled = false;
+        });
+
+        // Evento cuando cambia el Año
+        selectAnio.addEventListener('change', () => {
+            const docSel = selectDoctor.value;
+            const anioSel = selectAnio.value;
+
+            if(!docSel || !anioSel) {
+                dashboardContent.classList.add('hidden');
+                return;
+            }
+
+            renderizarDashboard(bdData[docSel][anioSel]);
+        });
+
+        function renderizarDashboard(dataAnio) {
+            dashboardContent.classList.remove('hidden');
+            
+            // 1. Total Central
+            txtTotal.textContent = dataAnio.totalCirugias;
+
+            // Destruir instancias previas de gráficos para evitar superposiciones visuales
+            Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
+
+            // 2. Gráfico de Líneas (Barras Horizontales para mejor lectura móvil)
+            const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
+            chartsInstance.lineas = new Chart(ctxLineas, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(dataAnio.porLineas || dataAnio.porLinea),
+                    datasets: [{
+                        label: 'Procedimientos',
+                        data: Object.values(dataAnio.porLineas || dataAnio.porLinea),
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // 3. Gráfico Evolución Mensual (Barras Verticales)
+            const ctxMeses = document.getElementById('chart-meses').getContext('2d');
+            chartsInstance.meses = new Chart(ctxMeses, {
+                type: 'bar',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        data: dataAnio.porMes,
+                        backgroundColor: '#1e3a8a',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // 4. Gráfico Género (Anillo / Doughnut)
+            const ctxGenero = document.getElementById('chart-genero').getContext('2d');
+            chartsInstance.genero = new Chart(ctxGenero, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Femenino (F)', 'Masculino (M)'],
+                    datasets: [{
+                        data: [dataAnio.porSexo.F, dataAnio.porSexo.M],
+                        backgroundColor: ['#ec4899', '#06b6d4']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right' } }
+                }
+            });
+
+            // 5. Gráfico de Sub-líneas (Modelos de Implantes - Barras Horizontales)
+            const ctxSub = document.getElementById('chart-sublineas').getContext('2d');
+            
+            // Ordenar de mayor a menor uso para que se vea más limpio
+            const subLineasOrdenadas = Object.entries(dataAnio.porSubLinea)
+                                             .sort((a, b) => b[1] - a[1])
+                                             .slice(0, 8); // Top 8 implantes más puestos
+
+            chartsInstance.sublineas = new Chart(ctxSub, {
+                type: 'bar',
+                data: {
+                    labels: subLineasOrdenadas.map(item => item[0]),
+                    datasets: [{
+                        data: subLineasOrdenadas.map(item => item[1]),
+                        backgroundColor: '#10b981',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

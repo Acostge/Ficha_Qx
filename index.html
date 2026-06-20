@@ -236,7 +236,7 @@
                 <div class="form-group">
                     <label for="select-doctor">Médico / Especialista</label>
                     <select id="select-doctor">
-                        <option value="">Seleccione un doctor...</option>
+                        <option value="">Seleccione un Doctor...</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -394,10 +394,10 @@
                 display: true,
                 align: 'end',
                 anchor: 'end',
-                color: '#0c1e36',
+                color: '#000000',
                 font: {
                     weight: 'bold',
-                    size: 11
+                    size: 13
                 },
                 formatter: (value) => value
             };
@@ -523,29 +523,61 @@
             // 4. SUB-LÍNEAS POR ARTICULACIÓN
             // ==========================================
             const PROTESIS_RODILLA = [
-                "Artroscopia de Rodilla", "LCA Infinity", "LCA Infinity + Artroscopia", "K-MOD Derecha",
-                "K-Mono RL/LM Izq.", "K-MOD Rev. Derecha", "K-MOD Izquierda", "Sist. Patelofemoral",
-                "Sist. p. Raíz Meniscal", "K-Mono RM/LL Der.", "LCA + Artroscopia", "K-Mono RM/LL Izq.",
-                "K-Mono RL/LM Der.", "Placa HTO Der.", "K-MOD Rev. Izquierda", "Placa HTO Izq.",
-                "Placa Próximal p. Tibia", "Placa Distal p. Tibia", "Sist. Raíz Meniscal"
+		"K-MOD Derecha",
+		"K-MOD Izquierda",
+		"K-Mono RL/LM Der.",
+		"K-Mono RM/LL Der.",
+		"K-Mono RL/LM Izq.",
+		"K-Mono RM/LL Izq.",
+		"K-MOD Rev. Derecha",
+		"K-MOD Rev. Izquierda",
+		"3D Derecha",
+		"3D Izquierda"
             ];
 
             const PROTESIS_CADERA = [
-                "Dualis Cup + F/Short Stem", "Dualis Cup + Korus Stem", "Dualis Cup + SMR Stem",
-                "FIN II Cup + Korus Stem", "FIN II Cup + FIN Stem", "Dualis Cup + Bioball Syst.",
-                "FIN II Cup + F/Short Stem", "Dualis Cup", "Dualis Cup + FIN Stem", "FIN II Cup",
-                "F/DMD Cup + SMR Stem", "F/DMD Cup + Dualis Cup", "F/DMD Cup + Korus Stem",
-                "F/DMD Cup + Bioball Syst.", "Muller Cup + Bioball Syst.", "F/DMD Cup",
-                "FIN II Cup + Bioball Syst.", "FIN II Cup + SMR Stem", "FIN Stem", "Muller",
-                "F/DMD Cup + F/Short Stem", "F/DMD Cup + FIN Stem", "F/Short Stem", "Korus Stem",
-                "Muller Cup + F/Short Stem", "Muller Cup + FIN Stem", "Muller Cup + Korus Stem",
-                "Muller Cup + SMR Stem"
+		"Dualis Cup",
+		"Dualis Cup + Bioball Syst.",
+		"Dualis Cup + F/Short Stem",
+		"Dualis Cup + FIN Stem",
+		"Dualis Cup + Korus Stem",
+		"Dualis Cup + SMR Stem",
+		"F/DMD Cup",
+		"F/DMD Cup + Bioball Syst.",
+		"F/DMD Cup + Dualis Cup",
+		"F/DMD Cup + F/Short Stem",
+		"F/DMD Cup + FIN Stem",
+		"F/DMD Cup + Korus Stem",
+		"F/DMD Cup + SMR Stem",
+		"FIN II Cup",
+		"FIN II Cup + Bioball Syst.",
+		"FIN II Cup + F/Short Stem",
+		"FIN II Cup + FIN Stem",
+		"FIN II Cup + Korus Stem",
+		"FIN II Cup + SMR Stem",
+		"Muller",
+		"Muller Cup + Bioball Syst.",
+		"Muller Cup + F/Short Stem",
+		"Muller Cup + FIN Stem",
+		"Muller Cup + Korus Stem",
+		"Muller Cup + SMR Stem",
+		"Bioball Syst.",
+		"F/Short Stem",
+		"Korus Stem",
+		"FIN Stem",
+		"SMR Stem",
+		"Thompson System"
+
             ];
 
             const PROTESIS_HOMBRO = [
-                "Artroscopia de Hombro", "Humelock Reversa FX", "EasyTech Reversa FX",
-                "Humelock Anatómica FX", "Humelock Revisión FX", "SMR Stem", "H/Reversa DJO",
-                "InSpace", "H/Foundation DJO", "EasyTech Anatómica FX"
+		"Humelock II Anatómica FX",
+		"Humelock II Reversa FX",
+		"Humelock II Revisión FX",
+		"EasyTech Anatómica FX",
+		"EasyTech Reversa FX",
+		"H/Foundation DJO",
+		"H/Reversa DJO"
             ];
 
             const dataSubCruda = dataAnio.porSubLinea || {};

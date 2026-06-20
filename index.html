@@ -32,6 +32,7 @@
         body {
             background-color: var(--piemca-bg);
             color: var(--piemca-text-main);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .app-container {
@@ -40,7 +41,7 @@
             padding: 0 16px 40px 16px;
         }
 
-        /* ENCABEZADO FIJO / STICKY CONTROLLER */
+        /* ENCABEZADO PERSISTENTE / AREA FIJA */
         .sticky-header {
             position: -webkit-sticky;
             position: sticky;
@@ -49,13 +50,12 @@
             padding-top: 16px;
             padding-bottom: 10px;
             z-index: 90;
-            /* Degradado sutil inferior para indicar que el contenido pasa por debajo */
             border-bottom: 1px solid rgba(8, 50, 100, 0.05);
             box-shadow: 0 8px 20px -8px rgba(8, 50, 100, 0.05);
         }
 
         header {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             text-align: center;
         }
 
@@ -76,15 +76,15 @@
 
         .selector-card {
             background: var(--piemca-card);
-            padding: 16px;
+            padding: 14px;
             border-radius: var(--piemca-border-radius);
             box-shadow: 0 4px 20px rgba(8, 50, 100, 0.04);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border: 1px solid rgba(0, 124, 194, 0.06);
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .form-group:last-child {
@@ -97,13 +97,13 @@
             font-weight: 700;
             text-transform: uppercase;
             color: var(--piemca-blue-dark);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             letter-spacing: 0.8px;
         }
 
         select {
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             border: 1.5px solid #e1e9f0;
             border-radius: 12px;
             background-color: #fafcfe;
@@ -125,17 +125,24 @@
             background-color: #ffffff;
         }
 
+        select:disabled {
+            background-color: #f1f5f9;
+            color: var(--piemca-text-muted);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
         .metric-badge {
             background: linear-gradient(135deg, var(--piemca-blue-dark), var(--piemca-blue-light));
             color: white;
-            padding: 16px;
+            padding: 14px;
             border-radius: var(--piemca-border-radius);
             text-align: center;
             box-shadow: 0 6px 18px rgba(0, 124, 194, 0.15);
         }
 
         .metric-badge h2 {
-            font-size: 2.3rem;
+            font-size: 2.1rem;
             font-weight: 800;
             line-height: 1;
         }
@@ -149,7 +156,7 @@
             font-weight: 700;
         }
 
-        /* ÁREA DE SCROLL (ZONA DE GRÁFICOS) */
+        /* AREA DESLIZABLE CORREGIDA POR SECCIONES */
         .scrollable-content {
             margin-top: 16px;
         }
@@ -161,6 +168,7 @@
             box-shadow: 0 4px 20px rgba(8, 50, 100, 0.03);
             margin-bottom: 16px;
             border: 1px solid rgba(8, 50, 100, 0.02);
+            transition: transform 0.3s ease;
         }
 
         .chart-card h3 {
@@ -180,6 +188,7 @@
             height: 230px;
         }
 
+        /* Loading */
         #loading-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -249,13 +258,6 @@
         <div id="dashboard-content" class="scrollable-content hidden">
             
             <div class="chart-card">
-                <h3>Total de Procedimientos por Línea</h3>
-                <div class="chart-container">
-                    <canvas id="chart-lineas"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
                 <h3>Evolución Mensual</h3>
                 <div class="chart-container">
                     <canvas id="chart-meses"></canvas>
@@ -263,16 +265,37 @@
             </div>
 
             <div class="chart-card">
-                <h3>Procedimientos por Género</h3>
-                <div class="chart-container" style="height: 200px;">
-                    <canvas id="chart-genero"></canvas>
+                <h3>Total de Procedimientos por Línea</h3>
+                <div class="chart-container" id="container-lineas">
+                    <canvas id="chart-lineas"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card" id="card-hombro">
+                <h3>💪 Sub-línea: Prótesis de Hombro</h3>
+                <div class="chart-container" id="container-hombro">
+                    <canvas id="chart-hombro"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card" id="card-cadera">
+                <h3>🦴 Sub-línea: Prótesis de Cadera</h3>
+                <div class="chart-container" id="container-cadera">
+                    <canvas id="chart-cadera"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card" id="card-rodilla">
+                <h3>🦵 Sub-línea: Prótesis de Rodilla</h3>
+                <div class="chart-container" id="container-rodilla">
+                    <canvas id="chart-rodilla"></canvas>
                 </div>
             </div>
 
             <div class="chart-card">
-                <h3>Sub-líneas e Implantes Colocados</h3>
-                <div class="chart-container" style="height: 280px;">
-                    <canvas id="chart-sublineas"></canvas>
+                <h3>Procedimientos por Género</h3>
+                <div class="chart-container" style="height: 200px;">
+                    <canvas id="chart-genero"></canvas>
                 </div>
             </div>
 
@@ -334,7 +357,7 @@
             aniosDisponibles.forEach(anio => {
                 if(anio !== "S/A") {
                     let opt = document.createElement('option');
-                    opt.value = anio;
+                    opt.value = r = anio;
                     opt.textContent = anio;
                     selectAnio.appendChild(opt);
                 }
@@ -356,155 +379,221 @@
             renderizarDashboard(bdData[docSel][anioSel]);
         });
 
-function renderizarDashboard(dataAnio) {
-    dashboardContent.classList.remove('hidden');
-    badgeContainer.classList.remove('hidden');
-    txtTotal.textContent = dataAnio.totalCirugias;
+        function renderizarDashboard(dataAnio) {
+            dashboardContent.classList.remove('hidden');
+            badgeContainer.classList.remove('hidden');
+            txtTotal.textContent = dataAnio.totalCirugias;
 
-    Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
+            // Limpiar instancias previas de gráficos
+            Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
 
-    // ==========================================
-    // AJUSTE PRECISO: FILTRADO DE LÍNEAS PRINCIPALES (OCULTANDO 0)
-    // ==========================================
-    const LINEAS_OFICIALES = [
-        "Artroscopia",
-        "Prótesis de Rodilla",
-        "Prótesis de Cadera",
-        "Prótesis de Hombro",
-        "Cirugía de Mano",
-        "Prótesis de Mano",
-        "Cirugía de Pie",
-        "Osteosíntesis",
-        "Columna",
-        "Máxilofacial"
-    ];
+            // ==========================================
+            // 1. FILTRADO DE LÍNEAS PRINCIPALES (OCULTANDO 0)
+            // ==========================================
+            const LINEAS_OFICIALES = [
+                "Artroscopia",
+                "Prótesis de Rodilla",
+                "Prótesis de Cadera",
+                "Prótesis de Hombro",
+                "Cirugía de Mano",
+                "Prótesis de Mano",
+                "Cirugía de Pie",
+                "Osteosíntesis",
+                "Columna",
+                "Máxilofacial"
+            ];
 
-    const dataLineasCruda = dataAnio.porLineas || dataAnio.porLinea || {};
-    let labelsLineasFiltradas = [];
-    let valoresLineasFiltrados = [];
+            const dataLineasCruda = dataAnio.porLineas || dataAnio.porLinea || {};
+            let labelsLineasFiltradas = [];
+            let valoresLineasFiltrados = [];
 
-    // Evaluamos solo las oficiales y excluimos si el valor es 0
-    LINEAS_OFICIALES.forEach(linea => {
-        const valor = dataLineasCruda[linea] || 0;
-        if (valor > 0) {
-            labelsLineasFiltradas.push(linea);
-            valoresLineasFiltrados.push(valor);
-        }
-    });
+            LINEAS_OFICIALES.forEach(linea => {
+                const valor = dataLineasCruda[linea] || 0;
+                if (valor > 0) {
+                    labelsLineasFiltradas.push(linea);
+                    valoresLineasFiltrados.push(valor);
+                }
+            });
 
-    // 1. Gráfico de Líneas Corregido
-    const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
-    chartsInstance.lineas = new Chart(ctxLineas, {
-        type: 'bar',
-        data: {
-            labels: labelsLineasFiltradas,
-            datasets: [{
-                data: valoresLineasFiltrados,
-                backgroundColor: '#007cc2',
-                borderRadius: 6,
-                barThickness: 14
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
-        }
-    });
-
-    // 2. Evolución Mensual (Corregido para forzar números enteros limpios)
-    const ctxMeses = document.getElementById('chart-meses').getContext('2d');
-    chartsInstance.meses = new Chart(ctxMeses, {
-        type: 'bar',
-        data: {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            datasets: [{
-                data: dataAnio.porMes,
-                backgroundColor: '#083264',
-                borderRadius: 5,
-                barThickness: 14
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { 
-                x: { grid: { display: false } }, 
-                y: { 
-                    grid: { display: false },
-                    ticks: {
-                        // Fuerza a que solo se muestren números enteros en el eje
-                        precision: 0,
-                        callback: function(value) {
-                            if (value % 1 === 0) { return value; }
+            const containerLineas = document.getElementById('container-lineas');
+            if(labelsLineasFiltradas.length > 0) {
+                containerLineas.style.height = `${Math.max(labelsLineasFiltradas.length * 35, 120)}px`;
+                
+                const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
+                chartsInstance.lineas = new Chart(ctxLineas, {
+                    type: 'bar',
+                    data: {
+                        labels: labelsLineasFiltradas,
+                        datasets: [{
+                            data: valoresLineasFiltrados,
+                            backgroundColor: '#007cc2',
+                            borderRadius: 6,
+                            barThickness: 14
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            x: { grid: { display: false }, ticks: { stepSize: 1 } }, 
+                            y: { grid: { display: false } } 
                         }
                     }
-                } 
+                });
+            } else {
+                containerLineas.innerHTML = '<p style="text-align:center; color:var(--piemca-text-muted); font-size:0.85rem; padding:20px;">No hay registros para las líneas principales en este periodo.</p>';
             }
-        }
-    });
 
-	// 3. Género (Corregido con colores representativos e iconos estéticos)
-    const ctxGenero = document.getElementById('chart-genero').getContext('2d');
-    chartsInstance.genero = new Chart(ctxGenero, {
-        type: 'doughnut',
-        data: {
-            labels: ['🚺 F', '🚹 M'],
-            datasets: [{
-                data: [dataAnio.porSexo.F, dataAnio.porSexo.M],
-                backgroundColor: ['#ff6b8b', '#007cc2'], // Rosado estético y Azul claro PIEMCA
-                borderWidth: 3,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-                legend: { 
-                    position: 'right', 
-                    labels: { 
-                        boxWidth: 14, 
-                        font: { 
-                            weight: 'bold',
-                            size: 14
+            // ==========================================
+            // 2. EVOLUCIÓN MENSUAL (CON CORRECCIÓN DE ENTEROS)
+            // ==========================================
+            const ctxMeses = document.getElementById('chart-meses').getContext('2d');
+            chartsInstance.meses = new Chart(ctxMeses, {
+                type: 'bar',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        data: dataAnio.porMes,
+                        backgroundColor: '#083264',
+                        borderRadius: 5,
+                        barThickness: 14
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        x: { grid: { display: false } }, 
+                        y: { 
+                            grid: { display: false },
+                            ticks: {
+                                precision: 0,
+                                callback: function(value) {
+                                    if (value % 1 === 0) { return value; }
+                                }
+                            }
+                        } 
+                    }
+                }
+            });
+
+            // ==========================================
+            // 3. GÉNERO (CON COLORES RECOMENTADOS E ICONOS)
+            // ==========================================
+            const ctxGenero = document.getElementById('chart-genero').getContext('2d');
+            chartsInstance.genero = new Chart(ctxGenero, {
+                type: 'doughnut',
+                data: {
+                    labels: ['👩 Fem.', '👨 Masc.'],
+                    datasets: [{
+                        data: [dataAnio.porSexo.F, dataAnio.porSexo.M],
+                        backgroundColor: ['#ff6b8b', '#007cc2'],
+                        borderWidth: 3,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { 
+                            position: 'right', 
+                            labels: { 
+                                boxWidth: 14, 
+                                font: { weight: 'bold', size: 13 },
+                                padding: 15
+                            } 
+                        } 
+                    }
+                }
+            });
+
+            // ==========================================
+            // 4. SEGMENTACIÓN DE SUB-LÍNEAS POR ARTICULACIÓN
+            // ==========================================
+            const PROTESIS_RODILLA = [
+                "Artroscopia de Rodilla", "LCA Infinity", "LCA Infinity + Artroscopia", "K-MOD Derecha",
+                "K-Mono RL/LM Izq.", "K-MOD Rev. Derecha", "K-MOD Izquierda", "Sist. Patelofemoral",
+                "Sist. p. Raíz Meniscal", "K-Mono RM/LL Der.", "LCA + Artroscopia", "K-Mono RM/LL Izq.",
+                "K-Mono RL/LM Der.", "Placa HTO Der.", "K-MOD Rev. Izquierda", "Placa HTO Izq.",
+                "Placa Próximal p. Tibia", "Placa Distal p. Tibia", "Sist. Raíz Meniscal"
+            ];
+
+            const PROTESIS_CADERA = [
+                "Dualis Cup + F/Short Stem", "Dualis Cup + Korus Stem", "Dualis Cup + SMR Stem",
+                "FIN II Cup + Korus Stem", "FIN II Cup + FIN Stem", "Dualis Cup + Bioball Syst.",
+                "FIN II Cup + F/Short Stem", "Dualis Cup", "Dualis Cup + FIN Stem", "FIN II Cup",
+                "F/DMD Cup + SMR Stem", "F/DMD Cup + Dualis Cup", "F/DMD Cup + Korus Stem",
+                "F/DMD Cup + Bioball Syst.", "Muller Cup + Bioball Syst.", "F/DMD Cup",
+                "FIN II Cup + Bioball Syst.", "FIN II Cup + SMR Stem", "FIN Stem", "Muller",
+                "F/DMD Cup + F/Short Stem", "F/DMD Cup + FIN Stem", "F/Short Stem", "Korus Stem",
+                "Muller Cup + F/Short Stem", "Muller Cup + FIN Stem", "Muller Cup + Korus Stem",
+                "Muller Cup + SMR Stem"
+            ];
+
+            const PROTESIS_HOMBRO = [
+                "Artroscopia de Hombro", "Humelock Reversa FX", "EasyTech Reversa FX",
+                "Humelock Anatómica FX", "Humelock Revisión FX", "SMR Stem", "H/Reversa DJO",
+                "InSpace", "H/Foundation DJO", "EasyTech Anatómica FX"
+            ];
+
+            const dataSubCruda = dataAnio.porSubLinea || {};
+
+            function procesarArticulacion(idCanvas, idCard, idContainer, catalogo, colorBarra) {
+                let labelsFiltradas = [];
+                let valoresFiltrados = [];
+
+                catalogo.forEach(item => {
+                    const valor = dataSubCruda[item] || 0;
+                    if (valor > 0) {
+                        labelsFiltradas.push(item);
+                        valoresFiltrados.push(valor);
+                    }
+                });
+
+                const cardElement = document.getElementById(idCard);
+
+                if (labelsFiltradas.length > 0) {
+                    cardElement.classList.remove('hidden');
+                    const container = document.getElementById(idContainer);
+                    container.style.height = `${Math.max(labelsFiltradas.length * 35, 110)}px`;
+
+                    const ctx = document.getElementById(idCanvas).getContext('2d');
+                    chartsInstance[idCanvas] = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labelsFiltradas,
+                            datasets: [{
+                                data: valoresFiltrados,
+                                backgroundColor: colorBarra,
+                                borderRadius: 6,
+                                barThickness: 12
+                            }]
                         },
-                        padding: 15
-                    } 
-                } 
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: { 
+                                x: { grid: { display: false }, ticks: { precision: 0, stepSize: 1 } }, 
+                                y: { grid: { display: false } } 
+                            }
+                }
+                    });
+                } else {
+                    cardElement.classList.add('hidden');
+                }
             }
-        }
-    });
 
-    // 4. Sub-líneas e Implantes (Se mantiene intacto el Top automático que te gustaba)
-    const ctxSub = document.getElementById('chart-sublineas').getContext('2d');
-    const subLineasOrdenadas = Object.entries(dataAnio.porSubLinea || {})
-                                     .sort((a, b) => b[1] - a[1])
-                                     .slice(0, 8);
-
-    chartsInstance.sublineas = new Chart(ctxSub, {
-        type: 'bar',
-        data: {
-            labels: subLineasOrdenadas.map(item => item[0]),
-            datasets: [{
-                data: subLineasOrdenadas.map(item => item[1]),
-                backgroundColor: '#5c728a',
-                borderRadius: 6,
-                barThickness: 12
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+            // Ejecutamos la segmentación con su respectivo color
+            procesarArticulacion('chart-hombro', 'card-hombro', 'container-hombro', PROTESIS_HOMBRO, '#083264');   // Azul Oscuro
+            procesarArticulacion('chart-cadera', 'card-cadera', 'container-cadera', PROTESIS_CADERA, '#5c728a');   // Gris Templado
+            procesarArticulacion('chart-rodilla', 'card-rodilla', 'container-rodilla', PROTESIS_RODILLA, '#007cc2'); // Azul Claro
         }
-    });
-}
     </script>
 </body>
 </html>

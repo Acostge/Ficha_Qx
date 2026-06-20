@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PIEMCA - Ficha Qx</title>
     
+    <!-- CONFIGURACIÓN DE ICONO PARA APP NATIVA -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#083264">
     <link rel="manifest" href="manifest.json">
 
+    <!-- Chart.js para gráficos táctiles -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -97,26 +99,6 @@
             color: var(--piemca-blue-dark);
             margin-bottom: 2px;
             letter-spacing: 0.5px;
-        }
-
-        /* DISEÑO DE INPUT BUSCADOR ELEGANTE */
-        .input-buscador {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1.5px solid #e1e9f0;
-            border-radius: 10px;
-            background-color: #fafcfe;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--piemca-text-main);
-            outline: none;
-            transition: all 0.2s ease;
-        }
-        
-        .input-buscador:focus {
-            border-color: var(--piemca-blue-light);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(0, 124, 194, 0.1);
         }
 
         select {
@@ -245,6 +227,7 @@
 
     <div class="app-container">
         
+        <!-- ENCABEZADO FIJO COMPACTO CON LOGO PNG -->
         <div class="sticky-header">
             <header>
                 <img src="logo.png" alt="PIEMCA LOGO" style="height: 38px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
@@ -253,9 +236,10 @@
 
             <div class="selector-card">
                 <div class="form-group">
-                    <label for="input-doctor">Médico / Especialista (Buscar)</label>
-                    <input type="text" id="input-doctor" list="lista-doctores" class="input-buscador" placeholder="Escriba el nombre o iniciales..." autocomplete="off">
-                    <datalist id="lista-doctores"></datalist>
+                    <label for="select-doctor">Médico / Especialista</label>
+                    <select id="select-doctor">
+                        <option value="">Seleccione un doctor...</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="select-anio">Año Fiscal</label>
@@ -273,8 +257,10 @@
             </div>
         </div>
 
+        <!-- CONTENIDO SCROLLABLE -->
         <div id="dashboard-content" class="scrollable-content hidden">
             
+            <!-- 1. Evolución Mensual -->
             <div class="chart-card">
                 <h3>Evolución Mensual</h3>
                 <div class="chart-container">
@@ -282,6 +268,7 @@
                 </div>
             </div>
 
+            <!-- 2. Total Procedimientos por Línea -->
             <div class="chart-card">
                 <h3>Total de Procedimientos por Línea</h3>
                 <div class="chart-container" id="container-lineas">
@@ -289,6 +276,7 @@
                 </div>
             </div>
 
+            <!-- 3. Sub-línea: Prótesis de Hombro -->
             <div class="chart-card" id="card-hombro">
                 <h3>💪 Sub-línea: Prótesis de Hombro</h3>
                 <div class="chart-container" id="container-hombro">
@@ -296,6 +284,7 @@
                 </div>
             </div>
 
+            <!-- 4. Sub-línea: Prótesis de Cadera -->
             <div class="chart-card" id="card-cadera">
                 <h3>🦴 Sub-línea: Prótesis de Cadera</h3>
                 <div class="chart-container" id="container-cadera">
@@ -303,6 +292,7 @@
                 </div>
             </div>
 
+            <!-- 5. Sub-línea: Prótesis de Rodilla -->
             <div class="chart-card" id="card-rodilla">
                 <h3>🦵 Sub-línea: Prótesis de Rodilla</h3>
                 <div class="chart-container" id="container-rodilla">
@@ -310,6 +300,7 @@
                 </div>
             </div>
 
+            <!-- 6. Procedimientos por Género -->
             <div class="chart-card">
                 <h3>Procedimientos por Género</h3>
                 <div class="chart-container" style="height: 190px;">
@@ -326,8 +317,7 @@
         let bdData = {};
         let chartsInstance = {};
 
-        // ELEMENTOS CONTROLADOS REVISADOS Y ASIGNADOS CORRECTAMENTE
-        const inputDoctor = document.getElementById('input-doctor');
+        const selectDoctor = document.getElementById('select-doctor');
         const selectAnio = document.getElementById('select-anio');
         const dashboardContent = document.getElementById('dashboard-content');
         const badgeContainer = document.getElementById('badge-container');
@@ -346,18 +336,14 @@
                     return;
                 }
 
-                // Poblar la lista oculta del buscador inteligente
                 const listaDoctores = Object.keys(bdData).sort();
-                const datalistDoc = document.getElementById('lista-doctores');
-                datalistDoc.innerHTML = '';
-                
                 listaDoctores.forEach(doc => {
                     let opt = document.createElement('option');
                     opt.value = doc;
-                    datalistDoc.appendChild(opt);
+                    opt.textContent = doc;
+                    selectDoctor.appendChild(opt);
                 });
 
-                // Apagar pantalla de carga - ¡Ahora sí pasará de aquí fluido!
                 loadingOverlay.classList.add('hidden');
             } catch (error) {
                 console.error("Error:", error);
@@ -365,32 +351,32 @@
             }
         }
 
-        // CONTROLADOR DE INPUT INTELIGENTE
-        inputDoctor.addEventListener('input', () => {
-            const docSel = inputDoctor.value;
+        selectDoctor.addEventListener('change', () => {
+            const docSel = selectDoctor.value;
             selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
             dashboardContent.classList.add('hidden');
             badgeContainer.classList.add('hidden');
             
-            // Solo si lo escrito coincide exactamente con un médico de la base de datos se activa el Año
-            if(docSel && bdData[docSel]) {
-                const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a);
-                aniosDisponibles.forEach(anio => {
-                    if(anio !== "S/A") {
-                        let opt = document.createElement('option');
-                        opt.value = anio;
-                        opt.textContent = anio;
-                        selectAnio.appendChild(opt);
-                    }
-                });
-                selectAnio.disabled = false;
-            } else {
+            if(!docSel) {
                 selectAnio.disabled = true;
+                return;
             }
+
+            const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a);
+            aniosDisponibles.forEach(anio => {
+                if(anio !== "S/A") {
+                    let opt = document.createElement('option');
+                    opt.value = anio;
+                    opt.textContent = anio;
+                    selectAnio.appendChild(opt);
+                }
+            });
+            
+            selectAnio.disabled = false;
         });
 
         selectAnio.addEventListener('change', () => {
-            const docSel = inputDoctor.value;
+            const docSel = selectDoctor.value;
             const anioSel = selectAnio.value;
 
             if(!docSel || !anioSel) {
@@ -410,19 +396,11 @@
             Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
 
             // ==========================================
-            // 1. FILTRADO DE LÍNEAS PRINCIPALES (OCULTANDO 0)
+            // 1. FILTRADO DE LÍNEAS PRINCIPALES
             // ==========================================
             const LINEAS_OFICIALES = [
-                "Artroscopia",
-                "Prótesis de Rodilla",
-                "Prótesis de Cadera",
-                "Prótesis de Hombro",
-                "Cirugía de Mano",
-                "Prótesis de Mano",
-                "Cirugía de Pie",
-                "Osteosíntesis",
-                "Columna",
-                "Máxilofacial"
+                "Artroscopia", "Prótesis de Rodilla", "Prótesis de Cadera", "Prótesis de Hombro",
+                "Cirugía de Mano", "Prótesis de Mano", "Cirugía de Pie", "Osteosíntesis", "Columna", "Máxilofacial"
             ];
 
             const dataLineasCruda = dataAnio.porLineas || dataAnio.porLinea || {};
@@ -491,12 +469,7 @@
                         x: { grid: { display: false } }, 
                         y: { 
                             grid: { display: false },
-                            ticks: {
-                                precision: 0,
-                                callback: function(value) {
-                                    if (value % 1 === 0) { return value; }
-                                }
-                            }
+                            ticks: { precision: 0 }
                         } 
                     }
                 }
@@ -523,11 +496,7 @@
                     plugins: { 
                         legend: { 
                             position: 'right', 
-                            labels: { 
-                                boxWidth: 14, 
-                                font: { weight: 'bold', size: 13 },
-                                padding: 15
-                            } 
+                            labels: { boxWidth: 14, font: { weight: 'bold', size: 13 }, padding: 15 } 
                         } 
                     }
                 }
@@ -611,9 +580,9 @@
                 }
             }
 
-            procesarArticulacion('chart-hombro', 'card-hombro', 'container-hombro', PROTESIS_HOMBRO, '#083264');   // Azul Oscuro
-            procesarArticulacion('chart-cadera', 'card-cadera', 'container-cadera', PROTESIS_CADERA, '#5c728a');   // Gris Templado
-            procesarArticulacion('chart-rodilla', 'card-rodilla', 'container-rodilla', PROTESIS_RODILLA, '#007cc2'); // Azul Claro
+            procesarArticulacion('chart-hombro', 'card-hombro', 'container-hombro', PROTESIS_HOMBRO, '#083264');
+            procesarArticulacion('chart-cadera', 'card-cadera', 'container-cadera', PROTESIS_CADERA, '#5c728a');
+            procesarArticulacion('chart-rodilla', 'card-rodilla', 'container-rodilla', PROTESIS_RODILLA, '#007cc2');
         }
     </script>
 </body>

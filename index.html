@@ -239,12 +239,11 @@
     </header>
 
             <div class="selector-card">
-                <div class="form-group">
-                    <label for="select-doctor">Médico / Especialista</label>
-                    <select id="select-doctor">
-                        <option value="">Seleccione un doctor...</option>
-                    </select>
-                </div>
+		<div class="form-group">
+    			<label for="select-doctor">Médico / Especialista (Buscar)</label>
+    			<input type="text" id="select-doctor" list="lista-doctores" placeholder="Escriba el nombre o iniciales..." autocomplete="off" style="width: 100%; padding: 8px 12px; border: 1.5px solid #e1e9f0; border-radius: 10px; background-color: #fafcfe; font-size: 0.85rem; font-weight: 600; color: var(--piemca-text-main); outline: none;">
+    			<datalist id="lista-doctores"></datalist>
+	   </div>
                 <div class="form-group">
                     <label for="select-anio">Año Fiscal</label>
                     <select id="select-anio" disabled>
@@ -340,13 +339,14 @@
                     return;
                 }
 
-                const listaDoctores = Object.keys(bdData).sort();
-                listaDoctores.forEach(doc => {
-                    let opt = document.createElement('option');
-                    opt.value = doc;
-                    opt.textContent = doc;
-                    selectDoctor.appendChild(opt);
-                });
+          const listaDoctores = Object.keys(bdData).sort();
+const datalistDoc = document.getElementById('lista-doctores');
+datalistDoc.innerHTML = ''; // Limpiar por seguridad
+listaDoctores.forEach(doc => {
+    let opt = document.createElement('option');
+    opt.value = doc; // Aquí es donde el buscador hace match automático
+    datalistDoc.appendChild(opt);
+});
 
                 loadingOverlay.classList.add('hidden');
             } catch (error) {
@@ -355,26 +355,29 @@
             }
         }
 
-        selectDoctor.addEventListener('change', () => {
-            const docSel = selectDoctor.value;
-            selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
-            dashboardContent.classList.add('hidden');
-            badgeContainer.classList.add('hidden');
-            
-            if(!docSel) {
-                selectAnio.disabled = true;
-                return;
+selectDoctor.addEventListener('input', () => {
+    const docSel = selectDoctor.value;
+    selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
+    dashboardContent.classList.add('hidden');
+    badgeContainer.classList.add('hidden');
+    
+    // Si lo que escribió el usuario coincide exactamente con un doctor de la base de datos
+    if(bdData[docSel]) {
+        const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a);
+        aniosDisponibles.forEach(anio => {
+            if(anio !== "S/A") {
+                let opt = document.createElement('option');
+                opt.value = anio;
+                opt.textContent = anio;
+                selectAnio.appendChild(opt);
             }
-
-            const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a);
-            aniosDisponibles.forEach(anio => {
-                if(anio !== "S/A") {
-                    let opt = document.createElement('option');
-                    opt.value = anio;
-                    opt.textContent = anio;
-                    selectAnio.appendChild(opt);
-                }
-            });
+        });
+        selectAnio.disabled = false;
+    } else {
+        // Si dejó vacío o está escribiendo a medias, el año permanece bloqueado
+        selectAnio.disabled = true;
+    }
+});
             
             selectAnio.disabled = false;
         });

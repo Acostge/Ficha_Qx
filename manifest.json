@@ -1,0 +1,21 @@
+{
+  "short_name": "Piemca Qx",
+  "name": "PIEMCA - Ficha Quirúrgica",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#f4f8fb",
+  "theme_color": "#083264",
+  "display": "standalone",
+  "orientation": "portrait"
+}

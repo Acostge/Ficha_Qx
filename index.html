@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PIEMCA - Ficha Qx</title>
     
-    <!-- CONFIGURACIÓN DE ICONO PARA APP NATIVA -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#083264">
     <link rel="manifest" href="manifest.json">
 
-    <!-- Chart.js para gráficos táctiles -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <style>
         :root {
             --piemca-bg: #f4f8fb;
@@ -227,7 +226,6 @@
 
     <div class="app-container">
         
-        <!-- ENCABEZADO FIJO COMPACTO CON LOGO PNG -->
         <div class="sticky-header">
             <header>
                 <img src="logo.png" alt="PIEMCA LOGO" style="height: 38px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
@@ -257,10 +255,8 @@
             </div>
         </div>
 
-        <!-- CONTENIDO SCROLLABLE -->
         <div id="dashboard-content" class="scrollable-content hidden">
             
-            <!-- 1. Evolución Mensual -->
             <div class="chart-card">
                 <h3>Evolución Mensual</h3>
                 <div class="chart-container">
@@ -268,7 +264,6 @@
                 </div>
             </div>
 
-            <!-- 2. Total Procedimientos por Línea -->
             <div class="chart-card">
                 <h3>Total de Procedimientos por Línea</h3>
                 <div class="chart-container" id="container-lineas">
@@ -276,7 +271,6 @@
                 </div>
             </div>
 
-            <!-- 3. Sub-línea: Prótesis de Hombro -->
             <div class="chart-card" id="card-hombro">
                 <h3>💪 Sub-línea: Prótesis de Hombro</h3>
                 <div class="chart-container" id="container-hombro">
@@ -284,7 +278,6 @@
                 </div>
             </div>
 
-            <!-- 4. Sub-línea: Prótesis de Cadera -->
             <div class="chart-card" id="card-cadera">
                 <h3>🦴 Sub-línea: Prótesis de Cadera</h3>
                 <div class="chart-container" id="container-cadera">
@@ -292,7 +285,6 @@
                 </div>
             </div>
 
-            <!-- 5. Sub-línea: Prótesis de Rodilla -->
             <div class="chart-card" id="card-rodilla">
                 <h3>🦵 Sub-línea: Prótesis de Rodilla</h3>
                 <div class="chart-container" id="container-rodilla">
@@ -300,7 +292,6 @@
                 </div>
             </div>
 
-            <!-- 6. Procedimientos por Género -->
             <div class="chart-card">
                 <h3>Procedimientos por Género</h3>
                 <div class="chart-container" style="height: 190px;">
@@ -395,8 +386,24 @@
 
             Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
 
+            // REGISTRAR PLUGIN DE ETIQUETAS DE DATOS GLOBALES
+            Chart.register(ChartDataLabels);
+
+            // CONFIGURACIÓN BASE ESTRELLA PARA LOS NÚMEROS
+            const dataLabelsConfig = {
+                display: true,
+                align: 'end',
+                anchor: 'end',
+                color: '#0c1e36',
+                font: {
+                    weight: 'bold',
+                    size: 11
+                },
+                formatter: (value) => value
+            };
+
             // ==========================================
-            // 1. FILTRADO DE LÍNEAS PRINCIPALES
+            // 1. TOTAL PROCEDIMIENTOS POR LÍNEA
             // ==========================================
             const LINEAS_OFICIALES = [
                 "Artroscopia", "Prótesis de Rodilla", "Prótesis de Cadera", "Prótesis de Hombro",
@@ -435,10 +442,14 @@
                         indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
+                        layout: { padding: { right: 25 } },
+                        plugins: { 
+                            legend: { display: false },
+                            datalabels: dataLabelsConfig
+                        },
                         scales: { 
-                            x: { grid: { display: false }, ticks: { stepSize: 1 } }, 
-                            y: { grid: { display: false } } 
+                            x: { display: false, grid: { display: false }, grace: '25%' }, 
+                            y: { grid: { display: false }, ticks: { font: { weight: '600' } } } 
                         }
                     }
                 });
@@ -464,13 +475,18 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    layout: { padding: { top: 20 } },
+                    plugins: { 
+                        legend: { display: false },
+                        datalabels: {
+                            ...dataLabelsConfig,
+                            align: 'top',
+                            formatter: (value) => value > 0 ? value : '' // Remueve ceros estorbosos
+                        }
+                    },
                     scales: { 
                         x: { grid: { display: false } }, 
-                        y: { 
-                            grid: { display: false },
-                            ticks: { precision: 0 }
-                        } 
+                        y: { display: false, grid: { display: false }, grace: '20%' } 
                     }
                 }
             });
@@ -497,7 +513,8 @@
                         legend: { 
                             position: 'right', 
                             labels: { boxWidth: 14, font: { weight: 'bold', size: 13 }, padding: 15 } 
-                        } 
+                        },
+                        datalabels: { display: false }
                     }
                 }
             });
@@ -568,10 +585,14 @@
                             indexAxis: 'y',
                             responsive: true,
                             maintainAspectRatio: false,
-                            plugins: { legend: { display: false } },
+                            layout: { padding: { right: 25 } },
+                            plugins: { 
+                                legend: { display: false },
+                                datalabels: dataLabelsConfig
+                            },
                             scales: { 
-                                x: { grid: { display: false }, ticks: { precision: 0, stepSize: 1 } }, 
-                                y: { grid: { display: false } } 
+                                x: { display: false, grid: { display: false }, grace: '25%' }, 
+                                y: { grid: { display: false }, ticks: { font: { size: 11, weight: '500' } } } 
                             }
                         }
                     });

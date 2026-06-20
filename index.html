@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PIEMCA - Ficha Qx</title>
     
+    <!-- CONFIGURACIÓN DE ICONO PARA APP NATIVA -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#083264">
 
+    <!-- Chart.js para gráficos táctiles -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -38,29 +40,29 @@
         .app-container {
             max-width: 480px;
             margin: 0 auto;
-            padding: 0 16px 40px 16px;
+            padding: 0 16px 30px 16px;
         }
 
-        /* ENCABEZADO PERSISTENTE / AREA FIJA */
+        /* ENCABEZADO PERSISTENTE COMPACTADO */
         .sticky-header {
             position: -webkit-sticky;
             position: sticky;
             top: 0;
             background-color: var(--piemca-bg);
-            padding-top: 16px;
-            padding-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 6px;
             z-index: 90;
-            border-bottom: 1px solid rgba(8, 50, 100, 0.05);
-            box-shadow: 0 8px 20px -8px rgba(8, 50, 100, 0.05);
+            border-bottom: 1px solid rgba(8, 50, 100, 0.04);
+            box-shadow: 0 8px 20px -10px rgba(8, 50, 100, 0.04);
         }
 
         header {
-            margin-bottom: 14px;
+            margin-bottom: 8px;
             text-align: center;
         }
 
         header h1 {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             color: var(--piemca-blue-dark);
             font-weight: 800;
             letter-spacing: -0.3px;
@@ -68,23 +70,24 @@
         }
 
         header p {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--piemca-text-muted);
-            margin-top: 2px;
+            margin-top: 1px;
             font-weight: 500;
         }
 
+        /* SELECTORES SLIM */
         .selector-card {
             background: var(--piemca-card);
-            padding: 14px;
-            border-radius: var(--piemca-border-radius);
-            box-shadow: 0 4px 20px rgba(8, 50, 100, 0.04);
-            margin-bottom: 10px;
-            border: 1px solid rgba(0, 124, 194, 0.06);
+            padding: 10px 14px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(8, 50, 100, 0.03);
+            margin-bottom: 8px;
+            border: 1px solid rgba(0, 124, 194, 0.05);
         }
 
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .form-group:last-child {
@@ -93,91 +96,93 @@
 
         label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
             color: var(--piemca-blue-dark);
-            margin-bottom: 4px;
-            letter-spacing: 0.8px;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
         }
 
         select {
             width: 100%;
-            padding: 11px;
+            padding: 8px 12px;
             border: 1.5px solid #e1e9f0;
-            border-radius: 12px;
+            border-radius: 10px;
             background-color: #fafcfe;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--piemca-text-main);
             outline: none;
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007cc2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 14px;
-            transition: all 0.25s ease;
+            background-position: right 12px center;
+            background-size: 12px;
+            transition: all 0.2s ease;
         }
 
         select:focus {
             border-color: var(--piemca-blue-light);
-            box-shadow: 0 0 0 3px rgba(0, 124, 194, 0.12);
             background-color: #ffffff;
         }
 
         select:disabled {
             background-color: #f1f5f9;
             color: var(--piemca-text-muted);
-            cursor: not-allowed;
             opacity: 0.6;
         }
 
+        /* BADGE DE CIRUGÍAS COMPACTO PERO VERTICAL DE NUEVO */
         .metric-badge {
             background: linear-gradient(135deg, var(--piemca-blue-dark), var(--piemca-blue-light));
             color: white;
-            padding: 14px;
-            border-radius: var(--piemca-border-radius);
+            padding: 10px 14px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            box-shadow: 0 6px 18px rgba(0, 124, 194, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 124, 194, 0.12);
         }
 
         .metric-badge h2 {
-            font-size: 2.1rem;
+            font-size: 1.8rem;
             font-weight: 800;
             line-height: 1;
         }
 
         .metric-badge p {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             opacity: 0.9;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
+            letter-spacing: 0.8px;
+            margin-top: 3px;
             font-weight: 700;
         }
 
-        /* AREA DESLIZABLE CORREGIDA POR SECCIONES */
+        /* AREA DE SCROLL */
         .scrollable-content {
-            margin-top: 16px;
+            margin-top: 10px;
         }
 
         .chart-card {
             background: var(--piemca-card);
-            padding: 20px;
+            padding: 16px;
             border-radius: var(--piemca-border-radius);
             box-shadow: 0 4px 20px rgba(8, 50, 100, 0.03);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             border: 1px solid rgba(8, 50, 100, 0.02);
-            transition: transform 0.3s ease;
         }
 
         .chart-card h3 {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--piemca-blue-dark);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             font-weight: 700;
-            border-left: 4px solid var(--piemca-blue-light);
-            padding-left: 10px;
+            border-left: 3.5px solid var(--piemca-blue-light);
+            padding-left: 8px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
@@ -185,10 +190,9 @@
         .chart-container {
             position: relative;
             width: 100%;
-            height: 230px;
+            height: 215px;
         }
 
-        /* Loading */
         #loading-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -226,6 +230,7 @@
 
     <div class="app-container">
         
+        <!-- ENCABEZADO FIJO COMPACTO -->
         <div class="sticky-header">
             <header>
                 <h1>PIEMCA</h1>
@@ -255,8 +260,10 @@
             </div>
         </div>
 
+        <!-- CONTENIDO SCROLLABLE EN ORDEN SOLICITADO -->
         <div id="dashboard-content" class="scrollable-content hidden">
             
+            <!-- 1. Evolución Mensual -->
             <div class="chart-card">
                 <h3>Evolución Mensual</h3>
                 <div class="chart-container">
@@ -264,6 +271,7 @@
                 </div>
             </div>
 
+            <!-- 2. Total Procedimientos por Línea -->
             <div class="chart-card">
                 <h3>Total de Procedimientos por Línea</h3>
                 <div class="chart-container" id="container-lineas">
@@ -271,6 +279,7 @@
                 </div>
             </div>
 
+            <!-- 3. Sub-línea: Prótesis de Hombro -->
             <div class="chart-card" id="card-hombro">
                 <h3>💪 Sub-línea: Prótesis de Hombro</h3>
                 <div class="chart-container" id="container-hombro">
@@ -278,6 +287,7 @@
                 </div>
             </div>
 
+            <!-- 4. Sub-línea: Prótesis de Cadera -->
             <div class="chart-card" id="card-cadera">
                 <h3>🦴 Sub-línea: Prótesis de Cadera</h3>
                 <div class="chart-container" id="container-cadera">
@@ -285,6 +295,7 @@
                 </div>
             </div>
 
+            <!-- 5. Sub-línea: Prótesis de Rodilla -->
             <div class="chart-card" id="card-rodilla">
                 <h3>🦵 Sub-línea: Prótesis de Rodilla</h3>
                 <div class="chart-container" id="container-rodilla">
@@ -292,9 +303,10 @@
                 </div>
             </div>
 
+            <!-- 6. Procedimientos por Género -->
             <div class="chart-card">
                 <h3>Procedimientos por Género</h3>
-                <div class="chart-container" style="height: 200px;">
+                <div class="chart-container" style="height: 190px;">
                     <canvas id="chart-genero"></canvas>
                 </div>
             </div>
@@ -357,7 +369,7 @@
             aniosDisponibles.forEach(anio => {
                 if(anio !== "S/A") {
                     let opt = document.createElement('option');
-                    opt.value = r = anio;
+                    opt.value = anio;
                     opt.textContent = anio;
                     selectAnio.appendChild(opt);
                 }
@@ -384,7 +396,6 @@
             badgeContainer.classList.remove('hidden');
             txtTotal.textContent = dataAnio.totalCirugias;
 
-            // Limpiar instancias previas de gráficos
             Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
 
             // ==========================================
@@ -447,7 +458,7 @@
             }
 
             // ==========================================
-            // 2. EVOLUCIÓN MENSUAL (CON CORRECCIÓN DE ENTEROS)
+            // 2. EVOLUCIÓN MENSUAL
             // ==========================================
             const ctxMeses = document.getElementById('chart-meses').getContext('2d');
             chartsInstance.meses = new Chart(ctxMeses, {
@@ -481,7 +492,7 @@
             });
 
             // ==========================================
-            // 3. GÉNERO (CON COLORES RECOMENTADOS E ICONOS)
+            // 3. GÉNERO
             // ==========================================
             const ctxGenero = document.getElementById('chart-genero').getContext('2d');
             chartsInstance.genero = new Chart(ctxGenero, {
@@ -512,8 +523,9 @@
             });
 
             // ==========================================
-            // 4. SEGMENTACIÓN DE SUB-LÍNEAS POR ARTICULACIÓN
+            // 4. SUB-LÍNEAS POR ARTICULACIÓN
             // ==========================================
+
             const PROTESIS_RODILLA = [
                 "Artroscopia de Rodilla", "LCA Infinity", "LCA Infinity + Artroscopia", "K-MOD Derecha",
                 "K-Mono RL/LM Izq.", "K-MOD Rev. Derecha", "K-MOD Izquierda", "Sist. Patelofemoral",
@@ -582,14 +594,13 @@
                                 x: { grid: { display: false }, ticks: { precision: 0, stepSize: 1 } }, 
                                 y: { grid: { display: false } } 
                             }
-                }
+                        }
                     });
                 } else {
                     cardElement.classList.add('hidden');
                 }
             }
 
-            // Ejecutamos la segmentación con su respectivo color
             procesarArticulacion('chart-hombro', 'card-hombro', 'container-hombro', PROTESIS_HOMBRO, '#083264');   // Azul Oscuro
             procesarArticulacion('chart-cadera', 'card-cadera', 'container-cadera', PROTESIS_CADERA, '#5c728a');   // Gris Templado
             procesarArticulacion('chart-rodilla', 'card-rodilla', 'container-rodilla', PROTESIS_RODILLA, '#007cc2'); // Azul Claro

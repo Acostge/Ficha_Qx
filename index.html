@@ -432,7 +432,7 @@
             } else {
                 lblTotal.textContent = "Cirugías Realizadas";
                 titleMeses.textContent = "Evolución Mensual";
-                titleLipogems.textContent = "💉 Sistema Lipogems";
+                titleLipogems.textContent = "💉 Lipogems System";
                 renderizarDashboard(bdData[docSel][anioSel], false);
             }
         });
@@ -535,7 +535,7 @@
             chartsInstance.genero = new Chart(ctxGenero, {
                 type: 'doughnut', 
                 data: { labels: ['F', 'M'], datasets: [{ data: [dataAnio.porSexo.F, dataAnio.porSexo.M], backgroundColor: ['#ff6b8b', '#007cc2'], borderWidth: 3, borderColor: '#ffffff' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, padding: 10 }, align: 'center', display: true }, tooltip: { enabled: true }, datalabels: { display: false } }, layout: { padding: { right: 40 } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 15, font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, padding: 10 }, align: 'center', display: true }, tooltip: { enabled: true }, datalabels: { display: false } }, layout: { padding: { right: 40 } } }
             });
 
             const dataLipogemsOrigen = dataAnio.porMesLipogems || [];

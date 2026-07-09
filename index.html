@@ -370,7 +370,7 @@
 
         selectDoctor.addEventListener('change', () => {
             const docSel = selectDoctor.value;
-            selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
+            selectAnio.innerHTML = '<option value="">Seleccione un Doctor...</option>';
             dashboardContent.classList.add('hidden');
             badgeContainer.classList.add('hidden');
             if(!docSel) { selectAnio.disabled = true; return; }
@@ -379,7 +379,8 @@
             aniosDisponibles.forEach(anio => {
                 if(anio !== "S/A") {
                     let opt = document.createElement('option');
-                    opt.value = r = anio; opt.textContent = anio;
+                    opt.value = anio; // <--- CORREGIDO: Eliminada la 'r =' que causaba el bloqueo
+                    opt.textContent = anio;
                     selectAnio.appendChild(opt);
                 }
             });

@@ -17,11 +17,15 @@
         :root {
             --piemca-bg: #f4f8fb;
             --piemca-card: #ffffff;
-            --piemca-blue-light: #007cc2; /* Azul del logo PIEMCA */
-            --piemca-blue-dark: #083264;  /* Azul oscuro complementario */
+            --piemca-blue-light: #007cc2;
+            --piemca-blue-dark: #083264; 
             --piemca-text-main: #0c1e36;
             --piemca-text-muted: #5c728a;
             --piemca-border-radius: 16px;
+            --biobrace-green: #71bf44;
+            --biobrace-dark: #002855;
+            --mtf-mustard: #f19a20;
+            --mtf-blue: #005ca9;
         }
 
         * {
@@ -43,7 +47,6 @@
             padding: 0 16px 30px 16px;
         }
 
-        /* ENCABEZADO PERSISTENTE COMPACTADO CON LOGO */
         .sticky-header {
             position: -webkit-sticky;
             position: sticky;
@@ -72,7 +75,6 @@
             font-weight: 500;
         }
 
-        /* SELECTORES SLIM */
         .selector-card {
             background: var(--piemca-card);
             padding: 10px 14px;
@@ -82,13 +84,8 @@
             border: 1px solid rgba(0, 124, 194, 0.05);
         }
 
-        .form-group {
-            margin-bottom: 6px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
+        .form-group { margin-bottom: 6px; }
+        .form-group:last-child { margin-bottom: 0; }
 
         label {
             display: block;
@@ -118,18 +115,6 @@
             transition: all 0.2s ease;
         }
 
-        select:focus {
-            border-color: var(--piemca-blue-light);
-            background-color: #ffffff;
-        }
-
-        select:disabled {
-            background-color: #f1f5f9;
-            color: var(--piemca-text-muted);
-            opacity: 0.6;
-        }
-
-        /* BADGE DE CIRUGÍAS ESTILO COMPACTO VERTICAL */
         .metric-badge {
             background: linear-gradient(135deg, var(--piemca-blue-dark), var(--piemca-blue-light));
             color: white;
@@ -143,25 +128,10 @@
             box-shadow: 0 4px 12px rgba(0, 124, 194, 0.12);
         }
 
-        .metric-badge h2 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            line-height: 1;
-        }
+        .metric-badge h2 { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+        .metric-badge p { font-size: 0.7rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 3px; font-weight: 700; }
 
-        .metric-badge p {
-            font-size: 0.7rem;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-top: 3px;
-            font-weight: 700;
-        }
-
-        /* AREA DE SCROLL */
-        .scrollable-content {
-            margin-top: 10px;
-        }
+        .scrollable-content { margin-top: 10px; }
 
         .chart-card {
             background: var(--piemca-card);
@@ -170,6 +140,21 @@
             box-shadow: 0 4px 20px rgba(8, 50, 100, 0.03);
             margin-bottom: 12px;
             border: 1px solid rgba(8, 50, 100, 0.02);
+        }
+
+        .chart-card.lipogems-theme {
+            background: linear-gradient(135deg, rgba(242, 110, 33, 0.04) 0%, rgba(12, 60, 108, 0.04) 100%);
+            border: 1.5px solid rgba(242, 110, 33, 0.12);
+        }
+
+        .chart-card.biobrace-theme {
+            background: linear-gradient(135deg, rgba(113, 191, 68, 0.05) 0%, rgba(0, 40, 85, 0.04) 100%);
+            border: 1.5px solid rgba(113, 191, 68, 0.15);
+        }
+
+        .chart-card.mtf-theme {
+            background: linear-gradient(135deg, rgba(241, 154, 32, 0.05) 0%, rgba(0, 92, 169, 0.05) 100%);
+            border: 1.5px solid rgba(241, 154, 32, 0.15);
         }
 
         .chart-card h3 {
@@ -183,11 +168,35 @@
             letter-spacing: 0.3px;
         }
 
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 215px;
+        .chart-card.lipogems-theme h3 { color: #0c3c6c; border-left-color: #f26e21; }
+        .chart-card.biobrace-theme h3 { color: var(--biobrace-dark); border-left-color: var(--biobrace-green); }
+        .chart-card.mtf-theme h3 { color: var(--mtf-blue); border-left-color: var(--mtf-mustard); }
+
+        .floating-badge {
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 800;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #ffffff;
+            animation: popIn 0.3s ease-out;
         }
+        
+        .badge-lipo { background-color: #f26e21; box-shadow: 0 3px 8px rgba(242, 110, 33, 0.3); }
+        .badge-bio { background-color: var(--biobrace-green); box-shadow: 0 3px 8px rgba(113, 191, 68, 0.4); }
+        .badge-mtf { background-color: var(--mtf-mustard); box-shadow: 0 3px 8px rgba(241, 154, 32, 0.4); }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            90% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .chart-container { position: relative; width: 100%; height: 215px; }
 
         #loading-overlay {
             position: fixed;
@@ -209,11 +218,7 @@
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -225,80 +230,87 @@
     </div>
 
     <div class="app-container">
-        
         <div class="sticky-header">
-            <header>
-                <img src="logo.png" alt="PIEMCA LOGO" style="height: 50px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
-                <p>Ficha Quirúrgica Inteligente</p>
-            </header>
+<header>
+    <img src="logo.png" alt="PIEMCA LOGO" style="height: 50px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
+    <p>Ficha Quirúrgica Inteligente</p>
+    <p id="txt-actualizacion" style="font-size: 0.68rem; color: #5c728a; font-weight: 400; margin-top: 4px; opacity: 0.8; font-style: italic;"></p>
+</header>
 
             <div class="selector-card">
                 <div class="form-group">
                     <label for="select-doctor">Médico / Especialista</label>
-                    <select id="select-doctor">
-                        <option value="">Seleccione un Doctor...</option>
-                    </select>
+                    <select id="select-doctor"><option value="">Seleccione un Doctor...</option></select>
                 </div>
                 <div class="form-group">
                     <label for="select-anio">Año Fiscal</label>
-                    <select id="select-anio" disabled>
-                        <option value="">Seleccione el año...</option>
-                    </select>
+                    <select id="select-anio" disabled><option value="">Seleccione el año...</option></select>
                 </div>
             </div>
 
             <div id="badge-container" class="hidden">
                 <div class="metric-badge">
                     <h2 id="txt-total">0</h2>
-                    <p>Cirugías Realizadas</p>
+                    <p id="lbl-total">Cirugías Realizadas</p>
                 </div>
             </div>
         </div>
 
         <div id="dashboard-content" class="scrollable-content hidden">
-            
             <div class="chart-card">
-                <h3>Evolución Mensual</h3>
-                <div class="chart-container">
-                    <canvas id="chart-meses"></canvas>
-                </div>
+                <h3 id="title-meses">Evolución Mensual</h3>
+                <div class="chart-container"><canvas id="chart-meses"></canvas></div>
             </div>
 
             <div class="chart-card">
                 <h3>Total de Procedimientos por Línea</h3>
-                <div class="chart-container" id="container-lineas">
-                    <canvas id="chart-lineas"></canvas>
-                </div>
+                <div class="chart-container" id="container-lineas"><canvas id="chart-lineas"></canvas></div>
             </div>
 
             <div class="chart-card" id="card-hombro">
                 <h3>💪 Sub-línea: Prótesis de Hombro</h3>
-                <div class="chart-container" id="container-hombro">
-                    <canvas id="chart-hombro"></canvas>
-                </div>
+                <div class="chart-container" id="container-hombro"><canvas id="chart-hombro"></canvas></div>
             </div>
 
             <div class="chart-card" id="card-cadera">
                 <h3>🦴 Sub-línea: Prótesis de Cadera</h3>
-                <div class="chart-container" id="container-cadera">
-                    <canvas id="chart-cadera"></canvas>
-                </div>
+                <div class="chart-container" id="container-cadera"><canvas id="chart-cadera"></canvas></div>
             </div>
 
             <div class="chart-card" id="card-rodilla">
                 <h3>🦵 Sub-línea: Prótesis de Rodilla</h3>
-                <div class="chart-container" id="container-rodilla">
-                    <canvas id="chart-rodilla"></canvas>
-                </div>
+                <div class="chart-container" id="container-rodilla"><canvas id="chart-rodilla"></canvas></div>
             </div>
 
             <div class="chart-card">
                 <h3>Procedimientos por Género</h3>
-                <div class="chart-container" style="height: 190px;">
-                    <canvas id="chart-genero"></canvas>
-                </div>
+                <div class="chart-container" style="height: 190px;"><canvas id="chart-genero"></canvas></div>
             </div>
 
+            <div class="chart-card lipogems-theme" id="card-lipogems">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 id="title-lipogems">🍊 Sistema Lipogems</h3>
+                    <div id="badge-lipogems" class="floating-badge badge-lipo">0</div>
+                </div>
+                <div class="chart-container"><canvas id="chart-lipogems"></canvas></div>
+            </div>
+
+            <div class="chart-card biobrace-theme" id="card-biobrace">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="margin-bottom: 0;">🦷 Implantes Biobrace</h3>
+                    <div id="badge-biobrace" class="floating-badge badge-bio">0</div>
+                </div>
+                <div class="chart-container" style="height: 230px;"><canvas id="chart-biobrace"></canvas></div>
+            </div>
+
+            <!-- NUEVO MÓDULO MTF BIOLOGICS -->
+            <div class="chart-card mtf-theme" id="card-mtf">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="margin-bottom: 0;">🧬 Aloinjertos MTF</h3>
+                    <div id="badge-mtf" class="floating-badge badge-mtf">0</div>
+                </div>
+                <div class="chart-container" style="height: 200px;"><canvas id="chart-mtf"></canvas></div>
+            </div>
         </div>
     </div>
 
@@ -314,323 +326,356 @@
         const badgeContainer = document.getElementById('badge-container');
         const loadingOverlay = document.getElementById('loading-overlay');
         const txtTotal = document.getElementById('txt-total');
+        const lblTotal = document.getElementById('lbl-total');
+        const titleMeses = document.getElementById('title-meses');
+        const titleLipogems = document.getElementById('title-lipogems');
 
         window.addEventListener('DOMContentLoaded', cargarDatos);
 
-        async function cargarDatos() {
-            try {
-                const response = await fetch(API_URL);
-                bdData = await response.json();
-                
-                if(bdData.error) {
-                    alert("Error: " + bdData.error);
-                    return;
-                }
+async function cargarDatos() {
+    try {
+        const response = await fetch(API_URL);
+        const resultado = await response.json(); // Ahora contiene 'fechaActualizacion' y 'datos'
+        
+        if(resultado.error) { alert("Error: " + resultado.error); return; }
 
-                const listaDoctores = Object.keys(bdData).sort();
-                listaDoctores.forEach(doc => {
-                    let opt = document.createElement('option');
-                    opt.value = doc;
-                    opt.textContent = doc;
-                    selectDoctor.appendChild(opt);
-                });
+        // 1. Desempaquetamos la información
+        bdData = resultado.datos; 
+        const fechaSincro = resultado.fechaActualizacion;
 
-                loadingOverlay.classList.add('hidden');
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Fallo de conexión de datos.");
-            }
+        // 2. Pintamos la fecha de manera sutil en la zona roja
+        if (fechaSincro) {
+            document.getElementById('txt-actualizacion').textContent = `Última sincronización de datos: ${fechaSincro}`;
         }
+
+        // 3. Seguimos con la lógica normal de llenar tu select rígido original
+        const listaDoctores = Object.keys(bdData).sort();
+        selectDoctor.innerHTML = '<option value="">Seleccione un Doctor...</option>';
+        listaDoctores.forEach(doc => {
+            let opt = document.createElement('option');
+            opt.value = doc;
+            opt.textContent = doc;
+            selectDoctor.appendChild(opt);
+        });
+
+        loadingOverlay.classList.add('hidden');
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Fallo de conexión de datos.");
+    }
+}
 
         selectDoctor.addEventListener('change', () => {
             const docSel = selectDoctor.value;
             selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
             dashboardContent.classList.add('hidden');
             badgeContainer.classList.add('hidden');
-            
-            if(!docSel) {
-                selectAnio.disabled = true;
-                return;
-            }
+            if(!docSel) { selectAnio.disabled = true; return; }
 
             const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a);
             aniosDisponibles.forEach(anio => {
                 if(anio !== "S/A") {
                     let opt = document.createElement('option');
-                    opt.value = anio;
-                    opt.textContent = anio;
+                    opt.value = anio; opt.textContent = anio;
                     selectAnio.appendChild(opt);
                 }
             });
-            
+
+            let optGeneral = document.createElement('option');
+            optGeneral.value = "GENERAL";
+            optGeneral.textContent = "GENERAL";
+            selectAnio.appendChild(optGeneral);
+
             selectAnio.disabled = false;
         });
 
         selectAnio.addEventListener('change', () => {
             const docSel = selectDoctor.value;
             const anioSel = selectAnio.value;
-
             if(!docSel || !anioSel) {
                 dashboardContent.classList.add('hidden');
                 badgeContainer.classList.add('hidden');
                 return;
             }
 
-            renderizarDashboard(bdData[docSel][anioSel]);
+            if(anioSel === "GENERAL") {
+                lblTotal.textContent = "Total de Cirugías en General";
+                titleMeses.textContent = "Evolución por Años Históricos";
+                titleLipogems.textContent = "🍊 Lipogems por Años Históricos";
+                const dataConsolidada = generarDataGeneral(bdData[docSel]);
+                renderizarDashboard(dataConsolidada, true);
+            } else {
+                lblTotal.textContent = "Cirugías Realizadas";
+                titleMeses.textContent = "Evolución Mensual";
+                titleLipogems.textContent = "🍊 Sistema Lipogems";
+                renderizarDashboard(bdData[docSel][anioSel], false);
+            }
         });
 
-        function renderizarDashboard(dataAnio) {
+        function generarDataGeneral(doctorData) {
+            let general = {
+                totalCirugias: 0,
+                porMes: [],
+                porLinea: {},
+                porSubLinea: {},
+                porSexo: { "M": 0, "F": 0 },
+                totalLipogems: 0,
+                porMesLipogems: [],
+                totalBiobrace: 0,
+                porTallaBiobrace: {
+                    "Biobrace 23 x 30 mm": 0,
+                    "Biobrace RC 23 x 25 mm": 0,
+                    "Biobrace 40 x 60 mm": 0,
+                    "Biobrace 5 x 250 mm": 0
+                },
+                totalMtf: 0,
+                porTipoMtf: {
+                    "Aloinjertos Liofilizados": 0,
+                    "Aloinjertos Fresco / Congelados": 0
+                },
+                aniosLabels: [] 
+            };
+
+            const aniosAsignados = Object.keys(doctorData).filter(a => a !== "S/A").sort((a,b) => a - b);
+            general.aniosLabels = aniosAsignados;
+
+            aniosAsignados.forEach(anio => {
+                const dAnio = doctorData[anio];
+                
+                general.totalCirugias += dAnio.totalCirugias || 0;
+                general.porMes.push(dAnio.totalCirugias || 0); 
+
+                const srcLinea = dAnio.porLineas || dAnio.porLinea || {};
+                Object.keys(srcLinea).forEach(lin => {
+                    general.porLinea[lin] = (general.porLinea[lin] || 0) + srcLinea[lin];
+                });
+
+                const srcSub = dAnio.porSubLinea || {};
+                Object.keys(srcSub).forEach(sub => {
+                    general.porSubLinea[sub] = (general.porSubLinea[sub] || 0) + srcSub[sub];
+                });
+
+                if(dAnio.porSexo) {
+                    general.porSexo.M += dAnio.porSexo.M || 0;
+                    general.porSexo.F += dAnio.porSexo.F || 0;
+                }
+
+                general.totalLipogems += dAnio.totalLipogems || 0;
+                general.porMesLipogems.push(dAnio.totalLipogems || 0);
+
+                general.totalBiobrace += dAnio.totalBiobrace || 0;
+                if(dAnio.porTallaBiobrace) {
+                    Object.keys(general.porTallaBiobrace).forEach(talla => {
+                        general.porTallaBiobrace[talla] += dAnio.porTallaBiobrace[talla] || 0;
+                    });
+                }
+
+                // Consolidación de MTF
+                general.totalMtf += dAnio.totalMtf || 0;
+                if(dAnio.porTipoMtf) {
+                    general.porTipoMtf["Aloinjertos Liofilizados"] += dAnio.porTipoMtf["Aloinjertos Liofilizados"] || 0;
+                    general.porTipoMtf["Aloinjertos Fresco / Congelados"] += dAnio.porTipoMtf["Aloinjertos Fresco / Congelados"] || 0;
+                }
+            });
+
+            return general;
+        }
+
+        function renderizarDashboard(dataAnio, esGeneral) {
             dashboardContent.classList.remove('hidden');
             badgeContainer.classList.remove('hidden');
             txtTotal.textContent = dataAnio.totalCirugias;
 
             Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
-
-            // REGISTRAR PLUGIN DE ETIQUETAS DE DATOS GLOBALES
             Chart.register(ChartDataLabels);
 
-            // CONFIGURACIÓN BASE ESTRELLA PARA LOS NÚMEROS
             const dataLabelsConfig = {
-                display: true,
-                align: 'end',
-                anchor: 'end',
-                color: '#000000',
-                font: {
-                    weight: 'bold',
-                    size: 13
-                },
-                formatter: (value) => value
+                display: true, align: 'end', anchor: 'end', color: '#000000',
+                font: { weight: 'bold', size: 13 }, formatter: (value) => value
             };
 
-            // ==========================================
-            // 1. TOTAL PROCEDIMIENTOS POR LÍNEA
-            // ==========================================
-            const LINEAS_OFICIALES = [
-                "Artroscopia", "Prótesis de Rodilla", "Prótesis de Cadera", "Prótesis de Hombro",
-                "Cirugía de Mano", "Prótesis de Mano", "Cirugía de Pie", "Osteosíntesis", "Columna", "Máxilofacial"
-            ];
-
+            // 1. TOTAL POR LÍNEA
+            const LINEAS_OFICIALES = ["Artroscopia", "Prótesis de Rodilla", "Prótesis de Cadera", "Prótesis de Hombro", "Cirugía de Mano", "Prótesis de Mano", "Cirugía de Pie", "Osteosíntesis", "Columna", "Máxilofacial"];
             const dataLineasCruda = dataAnio.porLineas || dataAnio.porLinea || {};
-            let labelsLineasFiltradas = [];
-            let valoresLineasFiltrados = [];
+            let labelsLineasFiltradas = []; let valoresLineasFiltrados = [];
 
             LINEAS_OFICIALES.forEach(linea => {
                 const valor = dataLineasCruda[linea] || 0;
-                if (valor > 0) {
-                    labelsLineasFiltradas.push(linea);
-                    valoresLineasFiltrados.push(valor);
-                }
+                if (valor > 0) { labelsLineasFiltradas.push(linea); valoresLineasFiltrados.push(valor); }
             });
 
             const containerLineas = document.getElementById('container-lineas');
             if(labelsLineasFiltradas.length > 0) {
                 containerLineas.style.height = `${Math.max(labelsLineasFiltradas.length * 35, 120)}px`;
-                
                 const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
                 chartsInstance.lineas = new Chart(ctxLineas, {
+                    type: 'bar', data: { labels: labelsLineasFiltradas, datasets: [{ data: valoresLineasFiltrados, backgroundColor: '#007cc2', borderRadius: 6, barThickness: 14 }] },
+                    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: dataLabelsConfig }, scales: { x: { display: false, grace: '25%' }, y: { grid: { display: false }, ticks: { font: { weight: '600' } } } } }
+                });
+            } else { containerLineas.innerHTML = '<p style="text-align:center; color:var(--piemca-text-muted); font-size:0.85rem; padding:20px;">No hay registros.</p>'; }
+
+            // 2. EVOLUCIÓN MENSUAL O ANUAL CIRUGÍAS
+            const ctxMeses = document.getElementById('chart-meses').getContext('2d');
+            const labelsEvolucion = esGeneral ? dataAnio.aniosLabels : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            
+            chartsInstance.meses = new Chart(ctxMeses, {
+                type: 'bar', data: { labels: labelsEvolucion, datasets: [{ data: dataAnio.porMes, backgroundColor: '#083264', borderRadius: 5, barThickness: esGeneral ? 22 : 14 }] },
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', formatter: (value) => value > 0 ? value : '' } }, scales: { x: { grid: { display: false } }, y: { display: false, grace: '20%' } } }
+            });
+
+            // 3. GÉNERO
+            const ctxGenero = document.getElementById('chart-genero').getContext('2d');
+            chartsInstance.genero = new Chart(ctxGenero, {
+                type: 'doughnut', data: { labels: ['F', 'M'], datasets: [{ data: [dataAnio.porSexo.F, dataAnio.porSexo.M], backgroundColor: ['#ff6b8b', '#007cc2'], borderWidth: 3, borderColor: '#ffffff' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 14, font: { weight: 'bold', size: 13 }, padding: 15 } }, tooltip: { enabled: true }, datalabels: { display: false } } }
+            });
+
+            // 4. GRÁFICO LIPOGEMS
+            const dataLipogemsOrigen = dataAnio.porMesLipogems || [];
+            const totalLipogemsAnio = dataAnio.totalLipogems || 0;
+            const cardLipogems = document.getElementById('card-lipogems');
+            const badgeLipogems = document.getElementById('badge-lipogems');
+
+            if(totalLipogemsAnio > 0) {
+                cardLipogems.classList.remove('hidden');
+                badgeLipogems.textContent = totalLipogemsAnio;
+                
+                const ctxLipogems = document.getElementById('chart-lipogems').getContext('2d');
+                const labelsLipoEvolucion = esGeneral ? dataAnio.aniosLabels : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                
+                chartsInstance.lipogems = new Chart(ctxLipogems, {
                     type: 'bar',
                     data: {
-                        labels: labelsLineasFiltradas,
+                        labels: labelsLipoEvolucion,
+                        datasets: [{ data: dataLipogemsOrigen, backgroundColor: '#f26e21', borderRadius: 5, barThickness: esGeneral ? 22 : 14 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } },
+                        plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', color: '#0c3c6c', formatter: (value) => value > 0 ? value : '' } },
+                        scales: { x: { grid: { display: false }, ticks: { font: { weight: '600' } } }, y: { display: false, grace: '20%' } }
+                    }
+                });
+            } else { cardLipogems.classList.add('hidden'); }
+
+            // 5. GRÁFICO DE BIOBRACE
+            const cardBiobrace = document.getElementById('card-biobrace');
+            const badgeBiobrace = document.getElementById('badge-biobrace');
+            const dataTallasBiobrace = dataAnio.porTallaBiobrace || {};
+            const totalBiobraceAnio = dataAnio.totalBiobrace || 0;
+
+            if(totalBiobraceAnio > 0) {
+                cardBiobrace.classList.remove('hidden');
+                badgeBiobrace.textContent = totalBiobraceAnio;
+
+                const labelsBiobrace = ["Biobrace 23 x 30 mm", "Biobrace RC 23 x 25 mm", "Biobrace 40 x 60 mm", "Biobrace 5 x 250 mm"];
+                const valoresBiobrace = labelsBiobrace.map(talla => dataTallasBiobrace[talla] || 0);
+
+                const ctxBiobrace = document.getElementById('chart-biobrace').getContext('2d');
+                chartsInstance.biobrace = new Chart(ctxBiobrace, {
+                    type: 'line',
+                    data: {
+                        labels: ['23x30 mm', 'RC 23x25 mm', '40x60 mm', '5x250 mm'],
                         datasets: [{
-                            data: valoresLineasFiltrados,
-                            backgroundColor: '#007cc2',
-                            borderRadius: 6,
-                            barThickness: 14
+                            data: valoresBiobrace,
+                            borderColor: '#002855',
+                            backgroundColor: '#71bf44',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#71bf44',
+                            pointBorderColor: '#002855',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            tension: 0.1
                         }]
                     },
                     options: {
-                        indexAxis: 'y',
+                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 25, left: 10, right: 10 } },
+                        plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { display: true, align: 'top', anchor: 'end', color: '#002855', font: { weight: 'bold', size: 13 }, formatter: (value) => value } },
+                        scales: { x: { grid: { display: true, color: 'rgba(0, 40, 85, 0.05)' }, ticks: { font: { weight: '600', size: 10.5 }, color: '#002855' } }, y: { display: false, grace: '35%' } }
+                    }
+                });
+            } else { cardBiobrace.classList.add('hidden'); }
+
+            // 6. NUEVO GRÁFICO DE MTF (ESTILO LINEAL COMO BIOBRACE)
+            const cardMtf = document.getElementById('card-mtf');
+            const badgeMtf = document.getElementById('badge-mtf');
+            const dataTiposMtf = dataAnio.porTipoMtf || {};
+            const totalMtfAnio = dataAnio.totalMtf || 0;
+
+            if(totalMtfAnio > 0) {
+                cardMtf.classList.remove('hidden');
+                badgeMtf.textContent = totalMtfAnio;
+
+                const valoresMtf = [
+                    dataTiposMtf["Aloinjertos Liofilizados"] || 0,
+                    dataTiposMtf["Aloinjertos Fresco / Congelados"] || 0
+                ];
+
+                const ctxMtf = document.getElementById('chart-mtf').getContext('2d');
+                chartsInstance.mtf = new Chart(ctxMtf, {
+                    type: 'line',
+                    data: {
+                        labels: ['Liofilizados', 'Fresco / Congelados'],
+                        datasets: [{
+                            data: valoresMtf,
+                            borderColor: '#005ca9',
+                            backgroundColor: '#f19a20',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#f19a20',
+                            pointBorderColor: '#005ca9',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        layout: { padding: { right: 25 } },
-                        plugins: { 
+                        layout: { padding: { top: 25, left: 25, right: 25 } },
+                        plugins: {
                             legend: { display: false },
-                            datalabels: dataLabelsConfig
+                            tooltip: { enabled: false },
+                            datalabels: {
+                                display: true,
+                                align: 'top',
+                                anchor: 'end',
+                                color: '#005ca9',
+                                font: { weight: 'bold', size: 13 },
+                                formatter: (value) => value
+                            }
                         },
-                        scales: { 
-                            x: { display: false, grid: { display: false }, grace: '25%' }, 
-                            y: { grid: { display: false }, ticks: { font: { weight: '600' } } } 
+                        scales: {
+                            x: { grid: { display: true, color: 'rgba(0, 92, 169, 0.05)' }, ticks: { font: { weight: '600', size: 11 }, color: '#005ca9' } },
+                            y: { display: false, grace: '35%' }
                         }
                     }
                 });
-            } else {
-                containerLineas.innerHTML = '<p style="text-align:center; color:var(--piemca-text-muted); font-size:0.85rem; padding:20px;">No hay registros para las líneas principales en este periodo.</p>';
-            }
+            } else { cardMtf.classList.add('hidden'); }
 
-            // ==========================================
-            // 2. EVOLUCIÓN MENSUAL
-            // ==========================================
-            const ctxMeses = document.getElementById('chart-meses').getContext('2d');
-            chartsInstance.meses = new Chart(ctxMeses, {
-                type: 'bar',
-                data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                    datasets: [{
-                        data: dataAnio.porMes,
-                        backgroundColor: '#083264',
-                        borderRadius: 5,
-                        barThickness: 14
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: { padding: { top: 20 } },
-                    plugins: { 
-                        legend: { display: false },
-                        datalabels: {
-                            ...dataLabelsConfig,
-                            align: 'top',
-                            formatter: (value) => value > 0 ? value : '' // Remueve ceros estorbosos
-                        }
-                    },
-                    scales: { 
-                        x: { grid: { display: false } }, 
-                        y: { display: false, grid: { display: false }, grace: '20%' } 
-                    }
-                }
-            });
-
-            // ==========================================
-            // 3. GÉNERO
-            // ==========================================
-            const ctxGenero = document.getElementById('chart-genero').getContext('2d');
-            chartsInstance.genero = new Chart(ctxGenero, {
-                type: 'doughnut',
-                data: {
-                    labels: ['👩 Fem.', '👨 Masc.'],
-                    datasets: [{
-                        data: [dataAnio.porSexo.F, dataAnio.porSexo.M],
-                        backgroundColor: ['#ff6b8b', '#007cc2'],
-                        borderWidth: 3,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { 
-                            position: 'right', 
-                            labels: { boxWidth: 14, font: { weight: 'bold', size: 13 }, padding: 15 } 
-                        },
-                        datalabels: { display: false }
-                    }
-                }
-            });
-
-            // ==========================================
-            // 4. SUB-LÍNEAS POR ARTICULACIÓN
-            // ==========================================
-            const PROTESIS_RODILLA = [
-		"K-MOD Derecha",
-		"K-MOD Izquierda",
-		"K-Mono RL/LM Der.",
-		"K-Mono RM/LL Der.",
-		"K-Mono RL/LM Izq.",
-		"K-Mono RM/LL Izq.",
-		"K-MOD Rev. Derecha",
-		"K-MOD Rev. Izquierda",
-		"3D Derecha",
-		"3D Izquierda"
-            ];
-
-            const PROTESIS_CADERA = [
-		"Dualis Cup",
-		"Dualis Cup + Bioball Syst.",
-		"Dualis Cup + F/Short Stem",
-		"Dualis Cup + FIN Stem",
-		"Dualis Cup + Korus Stem",
-		"Dualis Cup + SMR Stem",
-		"F/DMD Cup",
-		"F/DMD Cup + Bioball Syst.",
-		"F/DMD Cup + Dualis Cup",
-		"F/DMD Cup + F/Short Stem",
-		"F/DMD Cup + FIN Stem",
-		"F/DMD Cup + Korus Stem",
-		"F/DMD Cup + SMR Stem",
-		"FIN II Cup",
-		"FIN II Cup + Bioball Syst.",
-		"FIN II Cup + F/Short Stem",
-		"FIN II Cup + FIN Stem",
-		"FIN II Cup + Korus Stem",
-		"FIN II Cup + SMR Stem",
-		"Muller",
-		"Muller Cup + Bioball Syst.",
-		"Muller Cup + F/Short Stem",
-		"Muller Cup + FIN Stem",
-		"Muller Cup + Korus Stem",
-		"Muller Cup + SMR Stem",
-		"Bioball Syst.",
-		"F/Short Stem",
-		"Korus Stem",
-		"FIN Stem",
-		"SMR Stem",
-		"Thompson System"
-
-            ];
-
-            const PROTESIS_HOMBRO = [
-		"Humelock II Anatómica FX",
-		"Humelock II Reversa FX",
-		"Humelock II Revisión FX",
-		"EasyTech Anatómica FX",
-		"EasyTech Reversa FX",
-		"H/Foundation DJO",
-		"H/Reversa DJO"
-            ];
-
+            // 7. SUB-LÍNEAS POR ARTICULACIÓN
+            const PROTESIS_RODILLA = ["K-MOD Derecha", "K-MOD Izquierda", "K-Mono RL/LM Der.", "K-Mono RM/LL Der.", "K-Mono RL/LM Izq.", "K-Mono RM/LL Izq.", "K-MOD Rev. Derecha", "K-MOD Rev. Izquierda", "3D Derecha", "3D Izquierda"];
+            const PROTESIS_CADERA = ["Dualis Cup", "Dualis Cup + Bioball Syst.", "Dualis Cup + F/Short Stem", "Dualis Cup + FIN Stem", "Dualis Cup + Korus Stem", "Dualis Cup + SMR Stem", "F/DMD Cup", "F/DMD Cup + Bioball Syst.", "F/DMD Cup + Dualis Cup", "F/DMD Cup + F/Short Stem", "F/DMD Cup + FIN Stem", "F/DMD Cup + Korus Stem", "F/DMD Cup + SMR Stem", "FIN II Cup", "FIN II Cup + Bioball Syst.", "FIN II Cup + F/Short Stem", "FIN II Cup + FIN Stem", "FIN II Cup + Korus Stem", "FIN II Cup + SMR Stem", "Muller", "Muller Cup + Bioball Syst.", "Muller Cup + F/Short Stem", "Muller Cup + FIN Stem", "Muller Cup + Korus Stem", "Muller Cup + SMR Stem", "Bioball Syst.", "F/Short Stem", "Korus Stem", "FIN Stem", "SMR Stem", "Thompson System"];
+            const PROTESIS_HOMBRO = ["Humelock Anatómica FX", "Humelock Reversa FX", "Humelock Revisión FX", "EasyTech Anatómica FX", "EasyTech Reversa FX", "H/Foundation DJO", "H/Reversa DJO"];
+            
             const dataSubCruda = dataAnio.porSubLinea || {};
 
             function procesarArticulacion(idCanvas, idCard, idContainer, catalogo, colorBarra) {
-                let labelsFiltradas = [];
-                let valoresFiltrados = [];
-
+                let labelsFiltradas = []; let valoresFiltrados = [];
                 catalogo.forEach(item => {
                     const valor = dataSubCruda[item] || 0;
-                    if (valor > 0) {
-                        labelsFiltradas.push(item);
-                        valoresFiltrados.push(valor);
-                    }
+                    if (valor > 0) { labelsFiltradas.push(item); valoresFiltrados.push(valor); }
                 });
-
                 const cardElement = document.getElementById(idCard);
-
                 if (labelsFiltradas.length > 0) {
                     cardElement.classList.remove('hidden');
-                    const container = document.getElementById(idContainer);
-                    container.style.height = `${Math.max(labelsFiltradas.length * 35, 110)}px`;
-
+                    document.getElementById(idContainer).style.height = `${Math.max(labelsFiltradas.length * 35, 110)}px`;
                     const ctx = document.getElementById(idCanvas).getContext('2d');
                     chartsInstance[idCanvas] = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labelsFiltradas,
-                            datasets: [{
-                                data: valoresFiltrados,
-                                backgroundColor: colorBarra,
-                                borderRadius: 6,
-                                barThickness: 12
-                            }]
-                        },
-                        options: {
-                            indexAxis: 'y',
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            layout: { padding: { right: 25 } },
-                            plugins: { 
-                                legend: { display: false },
-                                datalabels: dataLabelsConfig
-                            },
-                            scales: { 
-                                x: { display: false, grid: { display: false }, grace: '25%' }, 
-                                y: { grid: { display: false }, ticks: { font: { size: 11, weight: '500' } } } 
-                            }
-                        }
+                        type: 'bar', data: { labels: labelsFiltradas, datasets: [{ data: valoresFiltrados, backgroundColor: colorBarra, borderRadius: 6, barThickness: 12 }] },
+                        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: dataLabelsConfig }, scales: { x: { display: false, grace: '25%' }, y: { grid: { display: false }, ticks: { font: { size: 11, weight: '500' } } } } }
                     });
-                } else {
-                    cardElement.classList.add('hidden');
-                }
+                } else { cardElement.classList.add('hidden'); }
             }
 
             procesarArticulacion('chart-hombro', 'card-hombro', 'container-hombro', PROTESIS_HOMBRO, '#083264');

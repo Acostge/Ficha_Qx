@@ -14,19 +14,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <style>
-        :root {
-            --piemca-bg: #f4f8fb;
-            --piemca-card: #ffffff;
-            --piemca-blue-light: #007cc2;
-            --piemca-blue-dark: #083264; 
-            --piemca-text-main: #0c1e36;
-            --piemca-text-muted: #5c728a;
-            --piemca-border-radius: 16px;
-            --biobrace-green: #71bf44;
-            --biobrace-dark: #002855;
-            --mtf-mustard: #f19a20;
-            --mtf-blue: #005ca9;
-        }
+
+	:root {
+    --piemca-bg: #f4f8fb;          /* Color de fondo de la app */
+    --piemca-card: #ffffff;        /* Color de fondo de las tarjetas (Cards) */
+    --piemca-blue-light: #007cc2;  /* Azul claro (Bordes y algunas barras) */
+    --piemca-blue-dark: #083264;   /* Azul oscuro (Títulos de las cards y botones) */ 
+    --piemca-text-main: #0c1e36;   /* Color de la letra principal */
+    --piemca-text-muted: #48596C;  /* Color de la letra secundaria o sutil */
+    --piemca-border-radius: 16px;  /* Qué tan redondeadas son las esquinas */
+    
+    /* Colores especiales para las tarjetas de abajo */
+    --biobrace-green: #71bf44;
+    --biobrace-dark: #002855;
+    --mtf-mustard: #f19a20;
+    --mtf-blue: #005ca9;
+}
 
         * {
             box-sizing: border-box;
@@ -84,26 +87,26 @@
             border: 1px solid rgba(0, 124, 194, 0.05);
         }
 
-        .form-group { margin-bottom: 6px; }
+        .form-group { margin-bottom: 10px; }
         .form-group:last-child { margin-bottom: 0; }
 
         label {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.78rem;        /* Subió para mejor legibilidad */
             font-weight: 700;
             text-transform: uppercase;
             color: var(--piemca-blue-dark);
-            margin-bottom: 2px;
+            margin-bottom: 6px;        /* Espaciado ajustado entre el título y el select */
             letter-spacing: 0.5px;
         }
 
         select {
             width: 100%;
-            padding: 8px 12px;
+            padding: 9px 12px;
             border: 1.5px solid #e1e9f0;
             border-radius: 10px;
             background-color: #fafcfe;
-            font-size: 0.85rem;
+            font-size: 0.82rem;        /* Rebalanceado proporcionalmente al label */
             font-weight: 600;
             color: var(--piemca-text-main);
             outline: none;
@@ -176,8 +179,8 @@
             color: #ffffff;
             font-size: 0.95rem;
             font-weight: 800;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -231,11 +234,11 @@
 
     <div class="app-container">
         <div class="sticky-header">
-<header>
-    <img src="logo.png" alt="PIEMCA LOGO" style="height: 50px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
-    <p>Ficha Quirúrgica Inteligente</p>
-    <p id="txt-actualizacion" style="font-size: 0.68rem; color: #5c728a; font-weight: 400; margin-top: 4px; opacity: 0.8; font-style: italic;"></p>
-</header>
+            <header>
+                <img src="logo.png" alt="PIEMCA LOGO" style="height: 60px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
+                <p>Ficha Quirúrgica Digital</p>
+                <p id="txt-actualizacion" style="font-size: 0.68rem; color: #5c728a; font-weight: 400; margin-top: 4px; opacity: 0.8; font-style: italic;"></p>
+            </header>
 
             <div class="selector-card">
                 <div class="form-group">
@@ -267,6 +270,12 @@
                 <div class="chart-container" id="container-lineas"><canvas id="chart-lineas"></canvas></div>
             </div>
 
+            <!-- TARJETAS DE SUB-LÍNEAS (ARTICULACIONES) -->
+            <div class="chart-card" id="card-mano">
+                <h3>✅ Sub-línea: Prótesis de Mano</h3>
+                <div class="chart-container" id="container-mano"><canvas id="chart-mano"></canvas></div>
+            </div>
+
             <div class="chart-card" id="card-hombro">
                 <h3>✅ Sub-línea: Prótesis de Hombro</h3>
                 <div class="chart-container" id="container-hombro"><canvas id="chart-hombro"></canvas></div>
@@ -284,7 +293,7 @@
 
             <div class="chart-card">
                 <h3>Procedimientos por Género</h3>
-                <div class="chart-container" style="height: 190px;"><canvas id="chart-genero"></canvas></div>
+                <div class="chart-container" style="height: 170px;"><canvas id="chart-genero"></canvas></div>
             </div>
 
             <div class="chart-card lipogems-theme" id="card-lipogems">
@@ -303,7 +312,6 @@
                 <div class="chart-container" style="height: 230px;"><canvas id="chart-biobrace"></canvas></div>
             </div>
 
-            <!-- NUEVO MÓDULO MTF BIOLOGICS -->
             <div class="chart-card mtf-theme" id="card-mtf">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <h3 style="margin-bottom: 0;">🧬 Allograft Tissue</h3>
@@ -332,38 +340,33 @@
 
         window.addEventListener('DOMContentLoaded', cargarDatos);
 
-async function cargarDatos() {
-    try {
-        const response = await fetch(API_URL);
-        const resultado = await response.json(); // Ahora contiene 'fechaActualizacion' y 'datos'
-        
-        if(resultado.error) { alert("Error: " + resultado.error); return; }
+        async function cargarDatos() {
+            try {
+                const response = await fetch(API_URL);
+                const resultado = await response.json();
+                if(resultado.error) { alert("Error: " + resultado.error); return; }
 
-        // 1. Desempaquetamos la información
-        bdData = resultado.datos; 
-        const fechaSincro = resultado.fechaActualizacion;
+                bdData = resultado.datos; 
+                const fechaSincro = resultado.fechaActualizacion;
 
-        // 2. Pintamos la fecha de manera sutil en la zona roja
-        if (fechaSincro) {
-            document.getElementById('txt-actualizacion').textContent = `Última sincronización de datos: ${fechaSincro}`;
+                if (fechaSincro) {
+                    document.getElementById('txt-actualizacion').textContent = `Última sincronización de datos: ${fechaSincro}`;
+                }
+
+                const listaDoctores = Object.keys(bdData).sort();
+                selectDoctor.innerHTML = '<option value="">Seleccione un Doctor...</option>';
+                listaDoctores.forEach(doc => {
+                    let opt = document.createElement('option');
+                    opt.value = doc; opt.textContent = doc;
+                    selectDoctor.appendChild(opt);
+                });
+
+                loadingOverlay.classList.add('hidden');
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Fallo de conexión de datos.");
+            }
         }
-
-        // 3. Seguimos con la lógica normal de llenar tu select rígido original
-        const listaDoctores = Object.keys(bdData).sort();
-        selectDoctor.innerHTML = '<option value="">Seleccione un Doctor...</option>';
-        listaDoctores.forEach(doc => {
-            let opt = document.createElement('option');
-            opt.value = doc;
-            opt.textContent = doc;
-            selectDoctor.appendChild(opt);
-        });
-
-        loadingOverlay.classList.add('hidden');
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Fallo de conexión de datos.");
-    }
-}
 
         selectDoctor.addEventListener('change', () => {
             const docSel = selectDoctor.value;
@@ -376,16 +379,14 @@ async function cargarDatos() {
             aniosDisponibles.forEach(anio => {
                 if(anio !== "S/A") {
                     let opt = document.createElement('option');
-                    opt.value = anio; opt.textContent = anio;
+                    opt.value = r = anio; opt.textContent = anio;
                     selectAnio.appendChild(opt);
                 }
             });
 
             let optGeneral = document.createElement('option');
-            optGeneral.value = "GENERAL";
-            optGeneral.textContent = "GENERAL";
+            optGeneral.value = "GENERAL"; optGeneral.textContent = "GENERAL";
             selectAnio.appendChild(optGeneral);
-
             selectAnio.disabled = false;
         });
 
@@ -407,32 +408,17 @@ async function cargarDatos() {
             } else {
                 lblTotal.textContent = "Cirugías Realizadas";
                 titleMeses.textContent = "Evolución Mensual";
-                titleLipogems.textContent = "💉 Sistema Lipogems";
+                titleLipogems.textContent = "💉 Lipogems System";
                 renderizarDashboard(bdData[docSel][anioSel], false);
             }
         });
 
         function generarDataGeneral(doctorData) {
             let general = {
-                totalCirugias: 0,
-                porMes: [],
-                porLinea: {},
-                porSubLinea: {},
-                porSexo: { "M": 0, "F": 0 },
-                totalLipogems: 0,
-                porMesLipogems: [],
-                totalBiobrace: 0,
-                porTallaBiobrace: {
-                    "Biobrace 23 x 30 mm": 0,
-                    "Biobrace RC 23 x 25 mm": 0,
-                    "Biobrace 40 x 60 mm": 0,
-                    "Biobrace 5 x 250 mm": 0
-                },
-                totalMtf: 0,
-                porTipoMtf: {
-                    "Aloinjertos Liofilizados": 0,
-                    "Aloinjertos Fresco / Congelados": 0
-                },
+                totalCirugias: 0, porMes: [], porLinea: {}, porSubLinea: {},
+                porSexo: { "M": 0, "F": 0 }, totalLipogems: 0, porMesLipogems: [],
+                totalBiobrace: 0, porTallaBiobrace: { "Biobrace 23 x 30 mm": 0, "Biobrace RC 23 x 25 mm": 0, "Biobrace 40 x 60 mm": 0, "Biobrace 5 x 250 mm": 0 },
+                totalMtf: 0, porTipoMtf: { "Aloinjertos Liofilizados": 0, "Aloinjertos Fresco / Congelados": 0 },
                 aniosLabels: [] 
             };
 
@@ -441,7 +427,6 @@ async function cargarDatos() {
 
             aniosAsignados.forEach(anio => {
                 const dAnio = doctorData[anio];
-                
                 general.totalCirugias += dAnio.totalCirugias || 0;
                 general.porMes.push(dAnio.totalCirugias || 0); 
 
@@ -470,14 +455,12 @@ async function cargarDatos() {
                     });
                 }
 
-                // Consolidación de MTF
                 general.totalMtf += dAnio.totalMtf || 0;
                 if(dAnio.porTipoMtf) {
                     general.porTipoMtf["Aloinjertos Liofilizados"] += dAnio.porTipoMtf["Aloinjertos Liofilizados"] || 0;
                     general.porTipoMtf["Aloinjertos Fresco / Congelados"] += dAnio.porTipoMtf["Aloinjertos Fresco / Congelados"] || 0;
                 }
             });
-
             return general;
         }
 
@@ -491,11 +474,22 @@ async function cargarDatos() {
 
             const dataLabelsConfig = {
                 display: true, align: 'end', anchor: 'end', color: '#000000',
-                font: { weight: 'bold', size: 13 }, formatter: (value) => value
+                font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 12 }, formatter: (value) => value
             };
 
             // 1. TOTAL POR LÍNEA
-            const LINEAS_OFICIALES = ["Artroscopia", "Prótesis de Rodilla", "Prótesis de Cadera", "Prótesis de Hombro", "Cirugía de Mano", "Prótesis de Mano", "Cirugía de Pie", "Osteosíntesis", "Columna", "Máxilofacial"];
+            const LINEAS_OFICIALES = [
+                "Prótesis de Mano", 
+		"Prótesis de Hombro", 
+		"Cirugía de Mano", 
+		"Artroscopia",
+                "Prótesis de Rodilla", 
+		"Prótesis de Cadera", 
+		"Osteosíntesis", 
+		"Cirugía de Pie",
+                "Columna", 
+		"Máxilofacial"
+            ];
             const dataLineasCruda = dataAnio.porLineas || dataAnio.porLinea || {};
             let labelsLineasFiltradas = []; let valoresLineasFiltrados = [];
 
@@ -510,24 +504,50 @@ async function cargarDatos() {
                 const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
                 chartsInstance.lineas = new Chart(ctxLineas, {
                     type: 'bar', data: { labels: labelsLineasFiltradas, datasets: [{ data: valoresLineasFiltrados, backgroundColor: '#007cc2', borderRadius: 6, barThickness: 14 }] },
-                    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: dataLabelsConfig }, scales: { x: { display: false, grace: '25%' }, y: { grid: { display: false }, ticks: { font: { weight: '600' } } } } }
+                    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: dataLabelsConfig }, scales: { x: { display: false, grace: '25%' }, y: { grid: { display: false }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 12 }, color: '#0c1e36' } } }
                 });
             } else { containerLineas.innerHTML = '<p style="text-align:center; color:var(--piemca-text-muted); font-size:0.85rem; padding:20px;">No hay registros.</p>'; }
 
             // 2. EVOLUCIÓN MENSUAL O ANUAL CIRUGÍAS
             const ctxMeses = document.getElementById('chart-meses').getContext('2d');
             const labelsEvolucion = esGeneral ? dataAnio.aniosLabels : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            
             chartsInstance.meses = new Chart(ctxMeses, {
                 type: 'bar', data: { labels: labelsEvolucion, datasets: [{ data: dataAnio.porMes, backgroundColor: '#083264', borderRadius: 5, barThickness: esGeneral ? 22 : 14 }] },
-                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', formatter: (value) => value > 0 ? value : '' } }, scales: { x: { grid: { display: false } }, y: { display: false, grace: '20%' } } }
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', formatter: (value) => value > 0 ? value : '' } }, scales: { x: { grid: { display: false }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 11 } } }, y: { display: false, grace: '20%' } } }
             });
 
-            // 3. GÉNERO
+            // 3. GÉNERO (Leyenda compactada y pegada a la dona)
             const ctxGenero = document.getElementById('chart-genero').getContext('2d');
             chartsInstance.genero = new Chart(ctxGenero, {
-                type: 'doughnut', data: { labels: ['F', 'M'], datasets: [{ data: [dataAnio.porSexo.F, dataAnio.porSexo.M], backgroundColor: ['#ff6b8b', '#007cc2'], borderWidth: 3, borderColor: '#ffffff' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 14, font: { weight: 'bold', size: 13 }, padding: 15 } }, tooltip: { enabled: true }, datalabels: { display: false } } }
+                type: 'doughnut', 
+                data: { 
+                    labels: ['F', 'M'], 
+                    datasets: [{ 
+                        data: [dataAnio.porSexo.F, dataAnio.porSexo.M], 
+                        backgroundColor: ['#ff6b8b', '#007cc2'], 
+                        borderWidth: 3, 
+                        borderColor: '#ffffff' 
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { 
+                            position: 'right', 
+                            labels: { 
+                                boxWidth: 15,       
+                                font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, 
+                                padding: 10         
+                            },
+                            align: 'center',
+                            display: true
+                        }, 
+                        tooltip: { enabled: true }, 
+                        datalabels: { display: false } 
+                    },
+                    layout: { padding: { right: 40 } }
+                }
             });
 
             // 4. GRÁFICO LIPOGEMS
@@ -539,21 +559,11 @@ async function cargarDatos() {
             if(totalLipogemsAnio > 0) {
                 cardLipogems.classList.remove('hidden');
                 badgeLipogems.textContent = totalLipogemsAnio;
-                
                 const ctxLipogems = document.getElementById('chart-lipogems').getContext('2d');
                 const labelsLipoEvolucion = esGeneral ? dataAnio.aniosLabels : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-                
                 chartsInstance.lipogems = new Chart(ctxLipogems, {
-                    type: 'bar',
-                    data: {
-                        labels: labelsLipoEvolucion,
-                        datasets: [{ data: dataLipogemsOrigen, backgroundColor: '#f26e21', borderRadius: 5, barThickness: esGeneral ? 22 : 14 }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } },
-                        plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', color: '#0c3c6c', formatter: (value) => value > 0 ? value : '' } },
-                        scales: { x: { grid: { display: false }, ticks: { font: { weight: '600' } } }, y: { display: false, grace: '20%' } }
-                    }
+                    type: 'bar', data: { labels: labelsLipoEvolucion, datasets: [{ data: dataLipogemsOrigen, backgroundColor: '#f26e21', borderRadius: 5, barThickness: esGeneral ? 22 : 14 }] },
+                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', color: '#0c3c6c', formatter: (value) => value > 0 ? value : '' } }, scales: { x: { grid: { display: false }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 11 } } }, y: { display: false, grace: '20%' } } }
                 });
             } else { cardLipogems.classList.add('hidden'); }
 
@@ -566,37 +576,16 @@ async function cargarDatos() {
             if(totalBiobraceAnio > 0) {
                 cardBiobrace.classList.remove('hidden');
                 badgeBiobrace.textContent = totalBiobraceAnio;
-
                 const labelsBiobrace = ["Biobrace 23 x 30 mm", "Biobrace RC 23 x 25 mm", "Biobrace 40 x 60 mm", "Biobrace 5 x 250 mm"];
                 const valoresBiobrace = labelsBiobrace.map(talla => dataTallasBiobrace[talla] || 0);
-
                 const ctxBiobrace = document.getElementById('chart-biobrace').getContext('2d');
                 chartsInstance.biobrace = new Chart(ctxBiobrace, {
-                    type: 'line',
-                    data: {
-                        labels: ['23x30 mm', 'RC 23x25 mm', '40x60 mm', '5x250 mm'],
-                        datasets: [{
-                            data: valoresBiobrace,
-                            borderColor: '#002855',
-                            backgroundColor: '#71bf44',
-                            borderWidth: 3,
-                            pointBackgroundColor: '#71bf44',
-                            pointBorderColor: '#002855',
-                            pointBorderWidth: 2,
-                            pointRadius: 6,
-                            pointHoverRadius: 8,
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 25, left: 10, right: 10 } },
-                        plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { display: true, align: 'top', anchor: 'end', color: '#002855', font: { weight: 'bold', size: 13 }, formatter: (value) => value } },
-                        scales: { x: { grid: { display: true, color: 'rgba(0, 40, 85, 0.05)' }, ticks: { font: { weight: '600', size: 10.5 }, color: '#002855' } }, y: { display: false, grace: '35%' } }
-                    }
+                    type: 'line', data: { labels: ['23x30 mm', 'RC 23x25 mm', '40x60 mm', '5x250 mm'], datasets: [{ data: valoresBiobrace, borderColor: '#002855', backgroundColor: '#71bf44', borderWidth: 3, pointBackgroundColor: '#71bf44', pointBorderColor: '#002855', pointBorderWidth: 2, pointRadius: 6, pointHoverRadius: 8, tension: 0.1 }] },
+                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 25, left: 10, right: 10 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { display: true, align: 'top', anchor: 'end', color: '#002855', font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, formatter: (value) => value } }, scales: { x: { grid: { display: true, color: 'rgba(0, 40, 85, 0.05)' }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 10.5 }, color: '#002855' } }, y: { display: false, grace: '35%' } } }
                 });
             } else { cardBiobrace.classList.add('hidden'); }
 
-            // 6. NUEVO GRÁFICO DE MTF (ESTILO LINEAL COMO BIOBRACE)
+            // 6. GRÁFICO DE MTF
             const cardMtf = document.getElementById('card-mtf');
             const badgeMtf = document.getElementById('badge-mtf');
             const dataTiposMtf = dataAnio.porTipoMtf || {};
@@ -605,55 +594,16 @@ async function cargarDatos() {
             if(totalMtfAnio > 0) {
                 cardMtf.classList.remove('hidden');
                 badgeMtf.textContent = totalMtfAnio;
-
-                const valoresMtf = [
-                    dataTiposMtf["Aloinjertos Liofilizados"] || 0,
-                    dataTiposMtf["Aloinjertos Fresco / Congelados"] || 0
-                ];
-
+                const valoresMtf = [dataTiposMtf["Aloinjertos Liofilizados"] || 0, dataTiposMtf["Aloinjertos Fresco / Congelados"] || 0];
                 const ctxMtf = document.getElementById('chart-mtf').getContext('2d');
                 chartsInstance.mtf = new Chart(ctxMtf, {
-                    type: 'line',
-                    data: {
-                        labels: ['Liofilizados', 'Fresco / Congelados'],
-                        datasets: [{
-                            data: valoresMtf,
-                            borderColor: '#005ca9',
-                            backgroundColor: '#f19a20',
-                            borderWidth: 3,
-                            pointBackgroundColor: '#f19a20',
-                            pointBorderColor: '#005ca9',
-                            pointBorderWidth: 2,
-                            pointRadius: 6,
-                            pointHoverRadius: 8,
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        layout: { padding: { top: 25, left: 25, right: 25 } },
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: { enabled: false },
-                            datalabels: {
-                                display: true,
-                                align: 'top',
-                                anchor: 'end',
-                                color: '#005ca9',
-                                font: { weight: 'bold', size: 13 },
-                                formatter: (value) => value
-                            }
-                        },
-                        scales: {
-                            x: { grid: { display: true, color: 'rgba(0, 92, 169, 0.05)' }, ticks: { font: { weight: '600', size: 11 }, color: '#005ca9' } },
-                            y: { display: false, grace: '35%' }
-                        }
-                    }
+                    type: 'line', data: { labels: ['Liofilizados', 'Fresco / Congelados'], datasets: [{ data: valoresMtf, borderColor: '#005ca9', backgroundColor: '#f19a20', borderWidth: 3, pointBackgroundColor: '#f19a20', pointBorderColor: '#005ca9', pointBorderWidth: 2, pointRadius: 6, pointHoverRadius: 8, tension: 0.1 }] },
+                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 25, left: 25, right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { display: true, align: 'top', anchor: 'end', color: '#005ca9', font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, formatter: (value) => value } }, scales: { x: { grid: { display: true, color: 'rgba(0, 92, 169, 0.05)' }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 11 }, color: '#005ca9' } }, y: { display: false, grace: '35%' } } }
                 });
             } else { cardMtf.classList.add('hidden'); }
 
             // 7. SUB-LÍNEAS POR ARTICULACIÓN
+            const PROTESIS_MANO = ["Prótesis Maïa", "Sist. Digitalis MCP", "Sist. Digitalis PIP"];
             const PROTESIS_RODILLA = ["K-MOD Derecha", "K-MOD Izquierda", "K-Mono RL/LM Der.", "K-Mono RM/LL Der.", "K-Mono RL/LM Izq.", "K-Mono RM/LL Izq.", "K-MOD Rev. Derecha", "K-MOD Rev. Izquierda", "3D Derecha", "3D Izquierda"];
             const PROTESIS_CADERA = ["Dualis Cup", "Dualis Cup + Bioball Syst.", "Dualis Cup + F/Short Stem", "Dualis Cup + FIN Stem", "Dualis Cup + Korus Stem", "Dualis Cup + SMR Stem", "F/DMD Cup", "F/DMD Cup + Bioball Syst.", "F/DMD Cup + Dualis Cup", "F/DMD Cup + F/Short Stem", "F/DMD Cup + FIN Stem", "F/DMD Cup + Korus Stem", "F/DMD Cup + SMR Stem", "FIN II Cup", "FIN II Cup + Bioball Syst.", "FIN II Cup + F/Short Stem", "FIN II Cup + FIN Stem", "FIN II Cup + Korus Stem", "FIN II Cup + SMR Stem", "Muller", "Muller Cup + Bioball Syst.", "Muller Cup + F/Short Stem", "Muller Cup + FIN Stem", "Muller Cup + Korus Stem", "Muller Cup + SMR Stem", "Bioball Syst.", "F/Short Stem", "Korus Stem", "FIN Stem", "SMR Stem", "Thompson System"];
             const PROTESIS_HOMBRO = ["Humelock Anatómica FX", "Humelock Reversa FX", "Humelock Revisión FX", "EasyTech Anatómica FX", "EasyTech Reversa FX", "H/Foundation DJO", "H/Reversa DJO"];
@@ -662,10 +612,16 @@ async function cargarDatos() {
 
             function procesarArticulacion(idCanvas, idCard, idContainer, catalogo, colorBarra) {
                 let labelsFiltradas = []; let valoresFiltrados = [];
+                const clavesSubCruda = Object.keys(dataSubCruda);
+
                 catalogo.forEach(item => {
-                    const valor = dataSubCruda[item] || 0;
+                    const claveEncontrada = clavesSubCruda.find(clave => 
+                        clave.trim().toLowerCase() === item.trim().toLowerCase()
+                    );
+                    const valor = claveEncontrada ? dataSubCruda[claveEncontrada] : 0;
                     if (valor > 0) { labelsFiltradas.push(item); valoresFiltrados.push(valor); }
                 });
+
                 const cardElement = document.getElementById(idCard);
                 if (labelsFiltradas.length > 0) {
                     cardElement.classList.remove('hidden');
@@ -673,14 +629,25 @@ async function cargarDatos() {
                     const ctx = document.getElementById(idCanvas).getContext('2d');
                     chartsInstance[idCanvas] = new Chart(ctx, {
                         type: 'bar', data: { labels: labelsFiltradas, datasets: [{ data: valoresFiltrados, backgroundColor: colorBarra, borderRadius: 6, barThickness: 12 }] },
-                        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: dataLabelsConfig }, scales: { x: { display: false, grace: '25%' }, y: { grid: { display: false }, ticks: { font: { size: 11, weight: '500' } } } } }
+                        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: dataLabelsConfig }, scales: { x: { display: false, grace: '25%' }, y: { grid: { display: false }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', size: 11.5, weight: '600' }, color: '#5c728a' } } } }
                     });
                 } else { cardElement.classList.add('hidden'); }
             }
 
-            procesarArticulacion('chart-hombro', 'card-hombro', 'container-hombro', PROTESIS_HOMBRO, '#083264');
-            procesarArticulacion('chart-cadera', 'card-cadera', 'container-cadera', PROTESIS_CADERA, '#5c728a');
-            procesarArticulacion('chart-rodilla', 'card-rodilla', 'container-rodilla', PROTESIS_RODILLA, '#007cc2');
+            // EJECUCIÓN ORDENADA
+            procesarArticulacion('chart-mano', 'card-mano', 'container-mano', PROTESIS_MANO, '#F1A983');
+            procesarArticulacion('chart-hombro', 'card-hombro', 'container-hombro', PROTESIS_HOMBRO, '#FFC000');
+            procesarArticulacion('chart-cadera', 'card-cadera', 'container-cadera', PROTESIS_CADERA, '#61CBF3');
+            procesarArticulacion('chart-rodilla', 'card-rodilla', 'container-rodilla', PROTESIS_RODILLA, '#8ED973');
+        }
+
+        // REGISTRO DEL SERVICE WORKER PARA CAPACIDAD PWA EN GITHUB
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito:', reg.scope))
+                    .catch(err => console.error('Error al registrar el Service Worker:', err));
+            });
         }
     </script>
 </body>

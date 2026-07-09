@@ -1,8 +1,9 @@
-// Variable de control para forzar la actualización
-const CACHE_VERSION = 'v1.5'; 
-const CACHE_NAME = `piemca-cache-${CACHE_VERSION}`;
+// === VARIABLE DE CONTROL DE CAMBIOS ===
+// Cada vez que alteres el diseño o agregues algo en el index.html, 
+// cambia este número (ej: de 'v1' a 'v2', 'v3', etc.) para alertar al teléfono.
+const CACHE_VERSION = 'v1.1'; 
 
-// Solo guardamos en caché los archivos locales que controlamos en Github
+const CACHE_NAME = `piemca-cache-${CACHE_VERSION}`;
 const ASSETS = [
   './',
   './index.html',
@@ -11,12 +12,12 @@ const ASSETS = [
   './logo.png'
 ];
 
-// Instalar el Service Worker y almacenar archivos locales
+// Instalar el Service Worker y almacenar archivos iniciales
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(ASSETS);
-    }).then(() => self.skipWaiting())
+    }).then(() => self.skipWaiting()) // Fuerza a activarse de inmediato
   );
 });
 
@@ -31,18 +32,12 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()) // Toma control sobre todas las pestañas abiertas
   );
 });
 
-// ESTRATEGIA DE RED MEJORADA: Solo interceptar archivos locales del repositorio
+// Responder peticiones desde el caché para máxima velocidad
 self.addEventListener('fetch', event => {
-  // Si la petición NO es interna de nuestro servidor/repositorio (ej: CDN de charts o script de Google), se va directo por internet sin pasar por el Service Worker
-  if (!event.request.url.startsWith(self.location.origin)) {
-    return; 
-  }
-
-  // Si es un archivo local (index.html, logos), buscamos en caché primero
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       return cachedResponse || fetch(event.request);
@@ -50,8 +45,8 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Escuchar la orden de actualización inmediata
-self.addEventListener('message', event => {
+// Escuchar la orden de actualización inmediata desde el index.html
+self.self.addEventListener('message', event => {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }

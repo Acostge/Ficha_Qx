@@ -268,17 +268,17 @@
             </div>
 
             <div class="chart-card" id="card-hombro">
-                <h3>💪 Sub-línea: Prótesis de Hombro</h3>
+                <h3>✅ Sub-línea: Prótesis de Hombro</h3>
                 <div class="chart-container" id="container-hombro"><canvas id="chart-hombro"></canvas></div>
             </div>
 
             <div class="chart-card" id="card-cadera">
-                <h3>🦴 Sub-línea: Prótesis de Cadera</h3>
+                <h3>✅ Sub-línea: Prótesis de Cadera</h3>
                 <div class="chart-container" id="container-cadera"><canvas id="chart-cadera"></canvas></div>
             </div>
 
             <div class="chart-card" id="card-rodilla">
-                <h3>🦵 Sub-línea: Prótesis de Rodilla</h3>
+                <h3>✅ Sub-línea: Prótesis de Rodilla</h3>
                 <div class="chart-container" id="container-rodilla"><canvas id="chart-rodilla"></canvas></div>
             </div>
 
@@ -289,7 +289,7 @@
 
             <div class="chart-card lipogems-theme" id="card-lipogems">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 id="title-lipogems">🍊 Sistema Lipogems</h3>
+                    <h3 id="title-lipogems">💉 Lipogems System</h3>
                     <div id="badge-lipogems" class="floating-badge badge-lipo">0</div>
                 </div>
                 <div class="chart-container"><canvas id="chart-lipogems"></canvas></div>
@@ -297,7 +297,7 @@
 
             <div class="chart-card biobrace-theme" id="card-biobrace">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="margin-bottom: 0;">🦷 Implantes Biobrace</h3>
+                    <h3 style="margin-bottom: 0;">🧬 Biobrace</h3>
                     <div id="badge-biobrace" class="floating-badge badge-bio">0</div>
                 </div>
                 <div class="chart-container" style="height: 230px;"><canvas id="chart-biobrace"></canvas></div>
@@ -306,7 +306,7 @@
             <!-- NUEVO MÓDULO MTF BIOLOGICS -->
             <div class="chart-card mtf-theme" id="card-mtf">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="margin-bottom: 0;">🧬 Aloinjertos MTF</h3>
+                    <h3 style="margin-bottom: 0;">🧬 Allograft Tissue</h3>
                     <div id="badge-mtf" class="floating-badge badge-mtf">0</div>
                 </div>
                 <div class="chart-container" style="height: 200px;"><canvas id="chart-mtf"></canvas></div>
@@ -401,13 +401,13 @@ async function cargarDatos() {
             if(anioSel === "GENERAL") {
                 lblTotal.textContent = "Total de Cirugías en General";
                 titleMeses.textContent = "Evolución por Años Históricos";
-                titleLipogems.textContent = "🍊 Lipogems por Años Históricos";
+                titleLipogems.textContent = "💉 Lipogems por Años Históricos";
                 const dataConsolidada = generarDataGeneral(bdData[docSel]);
                 renderizarDashboard(dataConsolidada, true);
             } else {
                 lblTotal.textContent = "Cirugías Realizadas";
                 titleMeses.textContent = "Evolución Mensual";
-                titleLipogems.textContent = "🍊 Sistema Lipogems";
+                titleLipogems.textContent = "💉 Sistema Lipogems";
                 renderizarDashboard(bdData[docSel][anioSel], false);
             }
         });

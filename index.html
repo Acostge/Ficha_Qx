@@ -289,7 +289,7 @@
             </div>
 
             <div class="chart-card">
-                <h3>Procedimientos por Género</h3>
+                <h3>♀️​♂️​ Procedimientos por Género</h3>
                 <div class="chart-container" style="height: 170px;"><canvas id="chart-genero"></canvas></div>
             </div>
 
@@ -321,7 +321,7 @@
 
     <script>
         // === SITEMA DE AUTO-ACTUALIZACIÓN INTELIGENTE (PWA) ===
-        if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(reg => {
                 // Forzar al Service Worker a buscar actualizaciones inmediatamente al abrir la app
                 reg.update();

@@ -46,7 +46,7 @@ self.addEventListener('fetch', event => {
 });
 
 // Escuchar la orden de actualización inmediata desde el index.html
-self.self.addEventListener('message', event => {
+self.addEventListener('message', event => {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }

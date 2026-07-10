@@ -1,7 +1,7 @@
 // === VARIABLE DE CONTROL DE CAMBIOS ===
 // Cada vez que alteres el diseño o agregues algo en el index.html, 
 // cambia este número (ej: de 'v1' a 'v2', 'v3', etc.) para alertar al teléfono.
-const CACHE_VERSION = 'v1.2'; 
+const CACHE_VERSION = 'v1.1'; 
 
 const CACHE_NAME = `piemca-cache-${CACHE_VERSION}`;
 const ASSETS = [
@@ -46,7 +46,7 @@ self.addEventListener('fetch', event => {
 });
 
 // Escuchar la orden de actualización inmediata desde el index.html
-self.addEventListener('message', event => {
+self.self.addEventListener('message', event => {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }

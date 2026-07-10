@@ -289,7 +289,7 @@
             </div>
 
             <div class="chart-card">
-                <h3>♀️​♂️​ Procedimientos por Género</h3>
+                <h3>Procedimientos por Género</h3>
                 <div class="chart-container" style="height: 170px;"><canvas id="chart-genero"></canvas></div>
             </div>
 
@@ -321,7 +321,7 @@
 
     <script>
         // === SITEMA DE AUTO-ACTUALIZACIÓN INTELIGENTE (PWA) ===
-if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(reg => {
                 // Forzar al Service Worker a buscar actualizaciones inmediatamente al abrir la app
                 reg.update();
@@ -432,7 +432,7 @@ if ('serviceWorker' in navigator) {
             } else {
                 lblTotal.textContent = "Cirugías Realizadas";
                 titleMeses.textContent = "Evolución Mensual";
-                titleLipogems.textContent = "💉 Lipogems System";
+                titleLipogems.textContent = "💉 Sistema Lipogems";
                 renderizarDashboard(bdData[docSel][anioSel], false);
             }
         });
@@ -535,7 +535,7 @@ if ('serviceWorker' in navigator) {
             chartsInstance.genero = new Chart(ctxGenero, {
                 type: 'doughnut', 
                 data: { labels: ['F', 'M'], datasets: [{ data: [dataAnio.porSexo.F, dataAnio.porSexo.M], backgroundColor: ['#ff6b8b', '#007cc2'], borderWidth: 3, borderColor: '#ffffff' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 15, font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, padding: 10 }, align: 'center', display: true }, tooltip: { enabled: true }, datalabels: { display: false } }, layout: { padding: { right: 40 } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, padding: 10 }, align: 'center', display: true }, tooltip: { enabled: true }, datalabels: { display: false } }, layout: { padding: { right: 40 } } }
             });
 
             const dataLipogemsOrigen = dataAnio.porMesLipogems || [];

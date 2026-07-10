@@ -177,8 +177,8 @@
             color: #ffffff;
             font-size: 0.95rem;
             font-weight: 800;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -233,7 +233,7 @@
     <div class="app-container">
         <div class="sticky-header">
             <header>
-                <img src="logo.png" alt="PIEMCA LOGO" style="height: 60px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
+                <img src="logo.png" alt="PIEMCA LOGO" style="height: 70px; width: auto; object-fit: contain; margin-bottom: 2px; margin-top: 2px;">
                 <p>Ficha Quirúrgica Digital</p>
                 <p id="txt-actualizacion" style="font-size: 0.68rem; color: #5c728a; font-weight: 400; margin-top: 4px; opacity: 0.8; font-style: italic;"></p>
             </header>
@@ -289,7 +289,7 @@
             </div>
 
             <div class="chart-card">
-                <h3>Procedimientos por Género</h3>
+                <h3>♀️♂️ Procedimientos por Género</h3>
                 <div class="chart-container" style="height: 170px;"><canvas id="chart-genero"></canvas></div>
             </div>
 
@@ -535,7 +535,7 @@
             chartsInstance.genero = new Chart(ctxGenero, {
                 type: 'doughnut', 
                 data: { labels: ['F', 'M'], datasets: [{ data: [dataAnio.porSexo.F, dataAnio.porSexo.M], backgroundColor: ['#ff6b8b', '#007cc2'], borderWidth: 3, borderColor: '#ffffff' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, padding: 10 }, align: 'center', display: true }, tooltip: { enabled: true }, datalabels: { display: false } }, layout: { padding: { right: 40 } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 15, font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, padding: 10 }, align: 'center', display: true }, tooltip: { enabled: true }, datalabels: { display: false } }, layout: { padding: { right: 40 } } }
             });
 
             const dataLipogemsOrigen = dataAnio.porMesLipogems || [];

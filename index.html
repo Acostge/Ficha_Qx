@@ -116,6 +116,14 @@
             transition: all 0.2s ease;
         }
 
+        select:disabled {
+            background-color: #f4f8fb;
+            color: #a0aec0;
+            cursor: not-allowed;
+            border-color: #e2e8f0;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a0aec0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+
         .metric-badge {
             background: linear-gradient(135deg, var(--piemca-blue-dark), var(--piemca-blue-light));
             color: white;
@@ -143,6 +151,92 @@
             border: 1px solid rgba(8, 50, 100, 0.02);
         }
 
+        .chart-card h3 {
+            font-size: 0.85rem;
+            color: var(--piemca-blue-dark);
+            margin-bottom: 12px;
+            font-weight: 700;
+            border-left: 3.5px solid var(--piemca-blue-light);
+            padding-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* DISEÑO DE LA TABLA DE BIENVENIDA */
+        .ranking-card {
+            background: var(--piemca-card);
+            padding: 16px;
+            border-radius: var(--piemca-border-radius);
+            box-shadow: 0 8px 24px rgba(8, 50, 100, 0.06);
+            border: 1.5px solid rgba(0, 124, 194, 0.1);
+            margin-top: 12px;
+        }
+
+        .ranking-card h3 {
+            font-size: 0.9rem;
+            color: var(--piemca-blue-dark);
+            margin-bottom: 14px;
+            font-weight: 800;
+            border-left: 4px solid var(--piemca-blue-light);
+            padding-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th {
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--piemca-text-muted);
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e9f0;
+            letter-spacing: 0.5px;
+        }
+
+        .ranking-table td {
+            padding: 10px 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #f0f4f8;
+            color: var(--piemca-text-main);
+            vertical-align: middle;
+        }
+
+        .ranking-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .col-pos {
+            width: 36px;
+            font-weight: 800;
+            color: var(--piemca-blue-light);
+            font-size: 0.9rem;
+        }
+
+        .top-podium {
+            color: #f19a20 !important;
+        }
+
+        .col-doc {
+            font-weight: 600;
+        }
+
+        .col-cant {
+            text-align: right;
+            font-weight: 700;
+            color: var(--piemca-blue-dark);
+            font-size: 0.95rem;
+            width: 60px;
+        }
+
         .chart-card.lipogems-theme {
             background: linear-gradient(135deg, rgba(242, 110, 33, 0.04) 0%, rgba(12, 60, 108, 0.04) 100%);
             border: 1.5px solid rgba(242, 110, 33, 0.12);
@@ -157,21 +251,6 @@
             background: linear-gradient(135deg, rgba(241, 154, 32, 0.05) 0%, rgba(0, 92, 169, 0.05) 100%);
             border: 1.5px solid rgba(241, 154, 32, 0.15);
         }
-
-        .chart-card h3 {
-            font-size: 0.85rem;
-            color: var(--piemca-blue-dark);
-            margin-bottom: 12px;
-            font-weight: 700;
-            border-left: 3.5px solid var(--piemca-blue-light);
-            padding-left: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .chart-card.lipogems-theme h3 { color: #0c3c6c; border-left-color: #f26e21; }
-        .chart-card.biobrace-theme h3 { color: var(--biobrace-dark); border-left-color: var(--biobrace-green); }
-        .chart-card.mtf-theme h3 { color: var(--mtf-blue); border-left-color: var(--mtf-mustard); }
 
         .floating-badge {
             color: #ffffff;
@@ -257,6 +336,26 @@
             </div>
         </div>
 
+        <!-- SECCIÓN VISTA INICIAL: TABLA DE BIENVENIDA -->
+        <div id="home-content" class="scrollable-content">
+            <div class="ranking-card">
+                <h3>🏆 TOP 10 - RANKING POR ESPECIALISTA</h3>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Pto</th>
+                            <th>Doctor (a)</th>
+                            <th style="text-align: right;">Cirugías</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-ranking">
+                        <!-- Se llena dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DETALLE INDIVIDUAL -->
         <div id="dashboard-content" class="scrollable-content hidden">
             <div class="chart-card">
                 <h3 id="title-meses">Evolución Mensual</h3>
@@ -320,24 +419,19 @@
     </div>
 
     <script>
-        // === SITEMA DE AUTO-ACTUALIZACIÓN INTELIGENTE (PWA) ===
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(reg => {
-                // Forzar al Service Worker a buscar actualizaciones inmediatamente al abrir la app
                 reg.update();
-
                 reg.addEventListener('updatefound', () => {
                     const nuevoWorker = reg.installing;
                     nuevoWorker.addEventListener('statechange', () => {
                         if (nuevoWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // Envía la orden de saltar la espera y recargar
                             nuevoWorker.postMessage({ action: 'skipWaiting' });
                         }
                     });
                 });
             });
 
-            // Escucha cuando el nuevo Service Worker toma el control y recarga la pantalla solo una vez
             let recargando = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (!recargando) {
@@ -354,6 +448,7 @@
 
         const selectDoctor = document.getElementById('select-doctor');
         const selectAnio = document.getElementById('select-anio');
+        const homeContent = document.getElementById('home-content');
         const dashboardContent = document.getElementById('dashboard-content');
         const badgeContainer = document.getElementById('badge-container');
         const loadingOverlay = document.getElementById('loading-overlay');
@@ -361,6 +456,7 @@
         const lblTotal = document.getElementById('lbl-total');
         const titleMeses = document.getElementById('title-meses');
         const titleLipogems = document.getElementById('title-lipogems');
+        const tableBodyRanking = document.getElementById('table-body-ranking');
 
         window.addEventListener('DOMContentLoaded', cargarDatos);
 
@@ -385,6 +481,12 @@
                     selectDoctor.appendChild(opt);
                 });
 
+                selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
+                selectAnio.disabled = true;
+
+                const anioActual = new Date().getFullYear().toString();
+                calcularYMostrarTop10(anioActual);
+
                 loadingOverlay.classList.add('hidden');
             } catch (error) {
                 console.error("Error:", error);
@@ -392,15 +494,36 @@
             }
         }
 
+        selectAnio.addEventListener('change', () => {
+            const docSel = selectDoctor.value;
+            const anioSel = selectAnio.value;
+            if (docSel && anioSel) {
+                ejecutarDashboardIndividual(docSel, anioSel);
+            }
+        });
+
         selectDoctor.addEventListener('change', () => {
             const docSel = selectDoctor.value;
-            selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
-            dashboardContent.classList.add('hidden');
-            badgeContainer.classList.add('hidden');
-            if(!docSel) { selectAnio.disabled = true; return; }
+            
+            if(!docSel) {
+                dashboardContent.classList.add('hidden');
+                badgeContainer.classList.add('hidden');
+                homeContent.classList.remove('hidden');
+                
+                selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
+                selectAnio.disabled = true;
 
-            const aniosDisponibles = Object.keys(bdData[docSel]).sort((a,b) => b - a);
-            aniosDisponibles.forEach(anio => {
+                const anioActual = new Date().getFullYear().toString();
+                calcularYMostrarTop10(anioActual);
+                return;
+            }
+
+            homeContent.classList.add('hidden');
+
+            const aniosMedico = Object.keys(bdData[docSel]).sort((a,b) => b - a);
+            selectAnio.innerHTML = '<option value="">Seleccione el año...</option>';
+            
+            aniosMedico.forEach(anio => {
                 if(anio !== "S/A") {
                     let opt = document.createElement('option');
                     opt.value = anio; opt.textContent = anio;
@@ -411,18 +534,13 @@
             let optGeneral = document.createElement('option');
             optGeneral.value = "GENERAL"; optGeneral.textContent = "GENERAL";
             selectAnio.appendChild(optGeneral);
+
             selectAnio.disabled = false;
+            badgeContainer.classList.add('hidden');
+            dashboardContent.classList.add('hidden');
         });
 
-        selectAnio.addEventListener('change', () => {
-            const docSel = selectDoctor.value;
-            const anioSel = selectAnio.value;
-            if(!docSel || !anioSel) {
-                dashboardContent.classList.add('hidden');
-                badgeContainer.classList.add('hidden');
-                return;
-            }
-
+        function ejecutarDashboardIndividual(docSel, anioSel) {
             if(anioSel === "GENERAL") {
                 lblTotal.textContent = "Total de Cirugías en General";
                 titleMeses.textContent = "Evolución por Años Históricos";
@@ -432,16 +550,50 @@
             } else {
                 lblTotal.textContent = "Cirugías Realizadas";
                 titleMeses.textContent = "Evolución Mensual";
-                titleLipogems.textContent = "💉 Sistema Lipogems";
+                titleLipogems.textContent = "💉 Lipogems System";
                 renderizarDashboard(bdData[docSel][anioSel], false);
             }
-        });
+        }
+
+        function calcularYMostrarTop10(anio) {
+            tableBodyRanking.innerHTML = '';
+            let rankingDoctores = [];
+
+            Object.keys(bdData).forEach(doc => {
+                if (bdData[doc] && bdData[doc][anio]) {
+                    const totalCirugias = bdData[doc][anio].totalCirugias || 0;
+                    if (totalCirugias > 0) {
+                        rankingDoctores.push({ nombre: doc, total: totalCirugias });
+                    }
+                }
+            });
+
+            rankingDoctores.sort((a, b) => b.total - a.total);
+            const top10 = rankingDoctores.slice(0, 10);
+
+            if (top10.length === 0) {
+                tableBodyRanking.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px; color:var(--piemca-text-muted);">No hay registros de cirugías en el año ${anio}.</td></tr>`;
+                return;
+            }
+
+            top10.forEach((item, index) => {
+                const fila = document.createElement('tr');
+                const esPodio = index < 5 ? 'top-podium' : '';
+
+                fila.innerHTML = `
+                    <td class="col-pos ${esPodio}">#${index + 1}</td>
+                    <td class="col-doc">${item.nombre}</td>
+                    <td class="col-cant">${item.total}</td>
+                `;
+                tableBodyRanking.appendChild(fila);
+            });
+        }
 
         function generarDataGeneral(doctorData) {
             let general = {
                 totalCirugias: 0, porMes: [], porLinea: {}, porSubLinea: {},
                 porSexo: { "M": 0, "F": 0 }, totalLipogems: 0, porMesLipogems: [],
-                totalBiobrace: 0, porTallaBiobrace: { "Biobrace 23 x 30 mm": 0, "Biobrace RC 23 x 25 mm": 0, "Biobrace 40 x 60 mm": 0, "Biobrace 5 x 250 mm": 0 },
+                totalBiobrace: 0, porTallyBiobrace: { "Biobrace 23 x 30 mm": 0, "Biobrace RC 23 x 25 mm": 0, "Biobrace 40 x 60 mm": 0, "Biobrace 5 x 250 mm": 0 },
                 totalMtf: 0, porTipoMtf: { "Aloinjertos Liofilizados": 0, "Aloinjertos Fresco / Congelados": 0 },
                 aniosLabels: [] 
             };
@@ -473,11 +625,12 @@
                 general.porMesLipogems.push(dAnio.totalLipogems || 0);
 
                 general.totalBiobrace += dAnio.totalBiobrace || 0;
-                if(dAnio.porTallaBiobrace) {
-                    Object.keys(general.porTallaBiobrace).forEach(talla => {
-                        general.porTallaBiobrace[talla] += dAnio.porTallaBiobrace[talla] || 0;
-                    });
-                }
+                
+                // RESTITUCIÓN DE COMPATIBILIDAD DE VARIABLES INTERNAS:
+                const srcBio = dAnio.porTallyBiobrace || dAnio.porTallaBiobrace || {};
+                Object.keys(general.porTallyBiobrace).forEach(talla => {
+                    general.porTallyBiobrace[talla] += srcBio[talla] || 0;
+                });
 
                 general.totalMtf += dAnio.totalMtf || 0;
                 if(dAnio.porTipoMtf) {
@@ -501,16 +654,17 @@
                 font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 12 }, formatter: (value) => value
             };
 
+            const dataLineasCrudaTop = dataAnio.porLineas || dataAnio.porLinea || {};
+
             const LINEAS_OFICIALES = [
                 "Prótesis de Mano", "Prótesis de Hombro", "Cirugía de Mano", "Artroscopia",
                 "Prótesis de Rodilla", "Prótesis de Cadera", "Osteosíntesis", "Cirugía de Pie",
                 "Columna", "Máxilofacial"
             ];
-            const dataLineasCruda = dataAnio.porLineas || dataAnio.porLinea || {};
+            
             let labelsLineasFiltradas = []; let valoresLineasFiltrados = [];
-
             LINEAS_OFICIALES.forEach(linea => {
-                const valor = dataLineasCruda[linea] || 0;
+                const valor = dataLineasCrudaTop[linea] || 0;
                 if (valor > 0) { labelsLineasFiltradas.push(linea); valoresLineasFiltrados.push(valor); }
             });
 
@@ -519,7 +673,7 @@
                 containerLineas.style.height = `${Math.max(labelsLineasFiltradas.length * 35, 120)}px`;
                 const ctxLineas = document.getElementById('chart-lineas').getContext('2d');
                 chartsInstance.lineas = new Chart(ctxLineas, {
-                    type: 'bar', data: { labels: labelsLineasFiltradas, datasets: [{ data: valoresLineasFiltrados, backgroundColor: '#007cc2', borderRadius: 6, barThickness: 14 }] },
+                    type: 'bar', data: { labels: labelsLineasFiltradas, datasets: [{ data: valoresLineasFiltrados, backgroundColor: '#083264', borderRadius: 6, barThickness: 14 }] },
                     options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 25 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: dataLabelsConfig }, scales: { x: { display: false, grace: '25%' }, y: { grid: { display: false }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 12 }, color: '#0c1e36' } } } }
                 });
             } else { containerLineas.innerHTML = '<p style="text-align:center; color:var(--piemca-text-muted); font-size:0.85rem; padding:20px;">No hay registros.</p>'; }
@@ -556,7 +710,9 @@
 
             const cardBiobrace = document.getElementById('card-biobrace');
             const badgeBiobrace = document.getElementById('badge-biobrace');
-            const dataTallasBiobrace = dataAnio.porTallaBiobrace || {};
+            
+            // CORRECCIÓN DIRECTA EN LA ASIGNACIÓN DE DATA PARA LA GRÁFICA DE BIOBRACE:
+            const dataTallasBiobrace = dataAnio.porTallyBiobrace || dataAnio.porTallaBiobrace || {};
             const totalBiobraceAnio = dataAnio.totalBiobrace || 0;
 
             if(totalBiobraceAnio > 0) {

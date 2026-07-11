@@ -478,7 +478,7 @@
                     document.getElementById('txt-actualizacion').textContent = `Última sincronización de datos: ${fechaSincro}`;
                 }
 
-                const listaDoctores = Object.keys(bdData).sort();
+                const listaDoctores = Object.keys(bdData).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
                 selectDoctor.innerHTML = '<option value="">Seleccione un Doctor...</option>';
                 listaDoctores.forEach(doc => {
                     let opt = document.createElement('option');

@@ -1,7 +1,7 @@
 // === VARIABLE DE CONTROL DE CAMBIOS ===
 // Cada vez que alteres el diseño o agregues algo en el index.html, 
 // cambia este número (ej: de 'v1' a 'v2', 'v3', etc.) para alertar al teléfono.
-const CACHE_VERSION = 'v1.4'; 
+const CACHE_VERSION = 'v1.5'; 
 
 const CACHE_NAME = `piemca-cache-${CACHE_VERSION}`;
 const ASSETS = [

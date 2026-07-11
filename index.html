@@ -41,7 +41,9 @@ body {
     background-color: var(--piemca-bg);
     color: var(--piemca-text-main);
     -webkit-tap-highlight-color: transparent;
-    overflow-x: hidden; /* Evita cualquier desborde lateral */
+    
+    /* ESTO DETIENE EL EFECTO REBOTE ELÁSTICO DE CHROME/SAFARI EN MÓVILES */
+    overscroll-behavior-y: none; 
 }
 
         .app-container {
@@ -50,17 +52,22 @@ body {
             padding: 0 16px 30px 16px;
         }
 
-        .sticky-header {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-            background-color: var(--piemca-bg);
-            padding-top: 10px;
-            padding-bottom: 6px;
-            z-index: 90;
-            border-bottom: 1px solid rgba(8, 50, 100, 0.04);
-            box-shadow: 0 8px 20px -10px rgba(8, 50, 100, 0.04);
-        }
+.sticky-header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: var(--piemca-bg);
+    padding-top: 10px;
+    padding-bottom: 6px;
+    z-index: 100; /* Lo subimos a 100 para asegurar prioridad de capas */
+    border-bottom: 1px solid rgba(8, 50, 100, 0.04);
+    box-shadow: 0 8px 20px -10px rgba(8, 50, 100, 0.04);
+    
+    /* SEGURO ANTI-PARPADEO: Le dice al procesador del celular que mantenga 
+       este elemento estable en renderizado por hardware */
+    will-change: transform;
+    transform: translateZ(0);
+}
 
         header {
             margin-bottom: 8px;

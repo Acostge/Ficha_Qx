@@ -36,37 +36,38 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-/* 1. El cuerpo de la app: congelamos el rebote del navegador móvil */
+/* 1. Congelamos la pantalla externa del navegador */
 body {
+    margin: 0;
+    padding: 0;
     background-color: var(--piemca-bg);
     color: var(--piemca-text-main);
     -webkit-tap-highlight-color: transparent;
-    
-    /* ESTO DETIENE EL EFECTO REBOTE ELÁSTICO DE CHROME/SAFARI EN MÓVILES */
-    overscroll-behavior-y: none; 
+    height: 100dvh; 
+    overflow: hidden; 
 }
 
-        .app-container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0 16px 30px 16px;
-        }
+/* 2. El contenedor principal: Controla las dimensiones y distribuye el espacio */
+.app-container {
+    width: 100%;
+    max-width: 480px; /* Mantén el ancho máximo original de esta app */
+    margin: 0 auto;
+    height: 100dvh; 
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
 
+/* 3. La cabecera: Simplemente se sienta arriba en su flujo natural */
 .sticky-header {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
     background-color: var(--piemca-bg);
     padding-top: 10px;
     padding-bottom: 6px;
-    z-index: 100; /* Lo subimos a 100 para asegurar prioridad de capas */
     border-bottom: 1px solid rgba(8, 50, 100, 0.04);
     box-shadow: 0 8px 20px -10px rgba(8, 50, 100, 0.04);
-    
-    /* SEGURO ANTI-PARPADEO: Le dice al procesador del celular que mantenga 
-       este elemento estable en renderizado por hardware */
-    will-change: transform;
-    transform: translateZ(0);
+    z-index: 90;
+    /* Asegura que no se encoja si el contenido empuja hacia arriba */
+    flex-shrink: 0; 
 }
 
         header {
@@ -149,7 +150,14 @@ body {
         .metric-badge h2 { font-size: 1.8rem; font-weight: 800; line-height: 1; }
         .metric-badge p { font-size: 0.7rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 3px; font-weight: 700; }
 
-        .scrollable-content { margin-top: 10px; }
+/* 4. El contenido: Se estira automáticamente y se adueña del scroll interno */
+.scrollable-content { 
+    margin-top: 10px;
+    flex-grow: 1; /* ¡MAGIA! Toma de forma responsiva todo el alto que sobra */
+    overflow-y: auto; 
+    -webkit-overflow-scrolling: touch; /* Scroll de seda en celulares */
+    padding-bottom: 20px; /* Margen de cortesía al final de la tabla/gráficos */
+}
 
         .chart-card {
             background: var(--piemca-card);

@@ -364,7 +364,7 @@
         <div id="dashboard-content" class="scrollable-content hidden">
             <div class="chart-card">
                 <h3 id="title-meses">Evolución Mensual</h3>
-                <div class="chart-container"><canvas id="chart-meses"></canvas></div>
+                <div class="chart-container" id="container-meses"><canvas id="chart-meses"></canvas></div>
             </div>
 
             <div class="chart-card">
@@ -394,7 +394,7 @@
 
             <div class="chart-card">
                 <h3>♀️♂️ Procedimientos por Género</h3>
-                <div class="chart-container" style="height: 170px;"><canvas id="chart-genero"></canvas></div>
+                <div class="chart-container" id="container-genero" style="height: 170px;"><canvas id="chart-genero"></canvas></div>
             </div>
 
             <div class="chart-card lipogems-theme" id="card-lipogems">
@@ -402,7 +402,7 @@
                     <h3 id="title-lipogems">💉 Lipogems System</h3>
                     <div id="badge-lipogems" class="floating-badge badge-lipo">0</div>
                 </div>
-                <div class="chart-container"><canvas id="chart-lipogems"></canvas></div>
+                <div class="chart-container" id="container-lipogems"><canvas id="chart-lipogems"></canvas></div>
             </div>
 
             <div class="chart-card biobrace-theme" id="card-biobrace">
@@ -410,7 +410,7 @@
                     <h3 style="margin-bottom: 0;">🧬 Biobrace</h3>
                     <div id="badge-biobrace" class="floating-badge badge-bio">0</div>
                 </div>
-                <div class="chart-container" style="height: 230px;"><canvas id="chart-biobrace"></canvas></div>
+                <div class="chart-container" id="container-biobrace" style="height: 230px;"><canvas id="chart-biobrace"></canvas></div>
             </div>
 
             <div class="chart-card mtf-theme" id="card-mtf">
@@ -418,7 +418,7 @@
                     <h3 style="margin-bottom: 0;">🧬 Allograft Tissue</h3>
                     <div id="badge-mtf" class="floating-badge badge-mtf">0</div>
                 </div>
-                <div class="chart-container" style="height: 200px;"><canvas id="chart-mtf"></canvas></div>
+                <div class="chart-container" id="container-mtf" style="height: 200px;"><canvas id="chart-mtf"></canvas></div>
             </div>
         </div>
     </div>
@@ -531,7 +531,7 @@
             aniosMedico.forEach(anio => {
                 if(anio !== "S/A") {
                     let opt = document.createElement('option');
-                    opt.value = anio; opt.textContent = anio;
+                    opt.value = nio = anio; opt.textContent = anio;
                     selectAnio.appendChild(opt);
                 }
             });
@@ -631,7 +631,6 @@
 
                 general.totalBiobrace += dAnio.totalBiobrace || 0;
                 
-                // RESTITUCIÓN DE COMPATIBILIDAD DE VARIABLES INTERNAS:
                 const srcBio = dAnio.porTallyBiobrace || dAnio.porTallaBiobrace || {};
                 Object.keys(general.porTallyBiobrace).forEach(talla => {
                     general.porTallyBiobrace[talla] += srcBio[talla] || 0;
@@ -646,12 +645,22 @@
             return general;
         }
 
+        function reiniciarCanvas(idContainer, idCanvas) {
+            if (chartsInstance[idCanvas]) {
+                chartsInstance[idCanvas].destroy();
+                delete chartsInstance[idCanvas];
+            }
+            const container = document.getElementById(idContainer);
+            if (container) {
+                container.innerHTML = `<canvas id="${idCanvas}"></canvas>`;
+            }
+        }
+
         function renderizarDashboard(dataAnio, esGeneral) {
             dashboardContent.classList.remove('hidden');
             badgeContainer.classList.remove('hidden');
             txtTotal.textContent = dataAnio.totalCirugias;
 
-            Object.keys(chartsInstance).forEach(key => chartsInstance[key].destroy());
             Chart.register(ChartDataLabels);
 
             const dataLabelsConfig = {
@@ -673,6 +682,7 @@
                 if (valor > 0) { labelsLineasFiltradas.push(linea); valoresLineasFiltrados.push(valor); }
             });
 
+            reiniciarCanvas('container-lineas', 'chart-lineas');
             const containerLineas = document.getElementById('container-lineas');
             if(labelsLineasFiltradas.length > 0) {
                 containerLineas.style.height = `${Math.max(labelsLineasFiltradas.length * 35, 120)}px`;
@@ -683,68 +693,90 @@
                 });
             } else { containerLineas.innerHTML = '<p style="text-align:center; color:var(--piemca-text-muted); font-size:0.85rem; padding:20px;">No hay registros.</p>'; }
 
-            const ctxMeses = document.getElementById('chart-meses').getContext('2d');
-            const labelsEvolucion = esGeneral ? dataAnio.aniosLabels : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            chartsInstance.meses = new Chart(ctxMeses, {
-                type: 'bar', data: { labels: labelsEvolucion, datasets: [{ data: dataAnio.porMes, backgroundColor: '#083264', borderRadius: 5, barThickness: esGeneral ? 22 : 14 }] },
-                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', formatter: (value) => value > 0 ? value : '' } }, scales: { x: { grid: { display: false }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 11 } } }, y: { display: false, grace: '20%' } } }
-            });
+            reiniciarCanvas('container-meses', 'chart-meses');
+            const containerMeses = document.getElementById('container-meses');
+            let msgMeses = containerMeses.querySelector('.no-records-msg');
 
-const ctxGenero = document.getElementById('chart-genero').getContext('2d');
-chartsInstance.genero = new Chart(ctxGenero, {
-    type: 'doughnut', 
-    data: { 
-        labels: ['F', 'M'], 
-        datasets: [{ 
-            data: [dataAnio.porSexo.F, dataAnio.porSexo.M], 
-            backgroundColor: ['#ff6b8b', '#007cc2'], 
-            borderWidth: 3, 
-            borderColor: '#ffffff' 
-        }] 
-    },
-    options: { 
-        responsive: true, 
-        maintainAspectRatio: false, 
-        plugins: { 
-            legend: { 
-                position: 'right', 
-                labels: { 
-                    boxWidth: 15, 
-                    font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, 
-                    padding: 10 
-                }, 
-                align: 'center', 
-                display: true 
-            }, 
-            datalabels: { display: false }, // Se mantiene limpio el centro de la dona
-            
-            // PERSONALIZACIÓN ADAPTADA DEL TOP FLOTANTE
-            tooltip: { 
-                enabled: true, // ¡Sigue activo y se oculta solo!
-                backgroundColor: 'rgba(12, 30, 54, 0.9)', // Fondo oscuro elegante y estilizado
-                padding: 8,
-                displayColors: true, // Mantiene el cuadrito de color identificativo
-                boxWidth: 8, // Cuadrito de color más fino y estético
-                boxHeight: 8,
-                boxPadding: 4,
-                titleFont: { size: 0 }, // Elimina el título de la cabecera del tooltip
-                bodyFont: { 
-                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
-                    weight: 'bold', 
-                    size: 13 
-                },
-                callbacks: {
-                    title: () => '', // Borra por completo cualquier texto de título arriba
-                    label: function(context) {
-                        // Borra las letras "F" o "M" y devuelve ÚNICAMENTE la cantidad con un espacio limpio
-                        return ` ${context.raw}`; 
-                    }
+            if (!dataAnio.totalCirugias || dataAnio.totalCirugias === 0) {
+                if (!msgMeses) {
+                    msgMeses = document.createElement('div');
+                    msgMeses.className = 'no-records-msg';
+                    msgMeses.style.textAlign = 'center';
+                    msgMeses.style.padding = '55px 0'; 
+                    msgMeses.style.color = '#5c728a';
+                    msgMeses.style.fontSize = '0.85rem';
+                    msgMeses.style.fontWeight = '500';
+                    msgMeses.textContent = 'No hay registros.';
+                    containerMeses.appendChild(msgMeses);
                 }
-            } 
-        }, 
-        layout: { padding: { right: 40 } } 
-    }
-});
+                const canvasMeses = document.getElementById('chart-meses');
+                if (canvasMeses) canvasMeses.style.display = 'none';
+            } else {
+                if (msgMeses) msgMeses.remove();
+                const canvasMeses = document.getElementById('chart-meses');
+                if (canvasMeses) canvasMeses.style.display = 'block';
+
+                const ctxMeses = canvasMeses.getContext('2d');
+                const labelsEvolucion = esGeneral ? dataAnio.aniosLabels : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                chartsInstance.meses = new Chart(ctxMeses, {
+                    type: 'bar', data: { labels: labelsEvolucion, datasets: [{ data: dataAnio.porMes, backgroundColor: '#083264', borderRadius: 5, barThickness: esGeneral ? 22 : 14 }] },
+                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { ...dataLabelsConfig, align: 'top', formatter: (value) => value > 0 ? value : '' } }, scales: { x: { grid: { display: false }, ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: '600', size: 11 } } }, y: { display: false, grace: '20%' } } }
+                });
+            }
+
+            reiniciarCanvas('container-genero', 'chart-genero');
+            const ctxGenero = document.getElementById('chart-genero').getContext('2d');
+            chartsInstance.genero = new Chart(ctxGenero, {
+                type: 'doughnut', 
+                data: { 
+                    labels: ['F', 'M'], 
+                    datasets: [{ 
+                        data: [dataAnio.porSexo.F, dataAnio.porSexo.M], 
+                        backgroundColor: ['#ff6b8b', '#007cc2'], 
+                        borderWidth: 3, 
+                        borderColor: '#ffffff' 
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { 
+                            position: 'right', 
+                            labels: { 
+                                boxWidth: 15, 
+                                font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', weight: 'bold', size: 13 }, 
+                                padding: 10 
+                            }, 
+                            align: 'center', 
+                            display: true 
+                        }, 
+                        datalabels: { display: false }, 
+                        tooltip: { 
+                            enabled: true, 
+                            backgroundColor: 'rgba(12, 30, 54, 0.9)', 
+                            padding: 8,
+                            displayColors: true, 
+                            boxWidth: 8, 
+                            boxHeight: 8,
+                            boxPadding: 4,
+                            titleFont: { size: 0 }, 
+                            bodyFont: { 
+                                family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+                                weight: 'bold', 
+                                size: 13 
+                            },
+                            callbacks: {
+                                title: () => '', 
+                                label: function(context) {
+                                    return ` ${context.raw}`; 
+                                }
+                            }
+                        } 
+                    }, 
+                    layout: { padding: { right: 40 } } 
+                }
+            });
 
             const dataLipogemsOrigen = dataAnio.porMesLipogems || [];
             const totalLipogemsAnio = dataAnio.totalLipogems || 0;
@@ -754,6 +786,7 @@ chartsInstance.genero = new Chart(ctxGenero, {
             if(totalLipogemsAnio > 0) {
                 cardLipogems.classList.remove('hidden');
                 badgeLipogems.textContent = totalLipogemsAnio;
+                reiniciarCanvas('container-lipogems', 'chart-lipogems');
                 const ctxLipogems = document.getElementById('chart-lipogems').getContext('2d');
                 const labelsLipoEvolucion = esGeneral ? dataAnio.aniosLabels : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
                 chartsInstance.lipogems = new Chart(ctxLipogems, {
@@ -764,14 +797,13 @@ chartsInstance.genero = new Chart(ctxGenero, {
 
             const cardBiobrace = document.getElementById('card-biobrace');
             const badgeBiobrace = document.getElementById('badge-biobrace');
-            
-            // CORRECCIÓN DIRECTA EN LA ASIGNACIÓN DE DATA PARA LA GRÁFICA DE BIOBRACE:
             const dataTallasBiobrace = dataAnio.porTallyBiobrace || dataAnio.porTallaBiobrace || {};
             const totalBiobraceAnio = dataAnio.totalBiobrace || 0;
 
             if(totalBiobraceAnio > 0) {
                 cardBiobrace.classList.remove('hidden');
                 badgeBiobrace.textContent = totalBiobraceAnio;
+                reiniciarCanvas('container-biobrace', 'chart-biobrace');
                 const labelsBiobrace = ["Biobrace 23 x 30 mm", "Biobrace RC 23 x 25 mm", "Biobrace 40 x 60 mm", "Biobrace 5 x 250 mm"];
                 const valoresBiobrace = labelsBiobrace.map(talla => dataTallasBiobrace[talla] || 0);
                 const ctxBiobrace = document.getElementById('chart-biobrace').getContext('2d');
@@ -789,6 +821,7 @@ chartsInstance.genero = new Chart(ctxGenero, {
             if(totalMtfAnio > 0) {
                 cardMtf.classList.remove('hidden');
                 badgeMtf.textContent = totalMtfAnio;
+                reiniciarCanvas('container-mtf', 'chart-mtf');
                 const valoresMtf = [dataTiposMtf["Aloinjertos Liofilizados"] || 0, dataTiposMtf["Aloinjertos Fresco / Congelados"] || 0];
                 const ctxMtf = document.getElementById('chart-mtf').getContext('2d');
                 chartsInstance.mtf = new Chart(ctxMtf, {
@@ -819,6 +852,7 @@ chartsInstance.genero = new Chart(ctxGenero, {
                 const cardElement = document.getElementById(idCard);
                 if (labelsFiltradas.length > 0) {
                     cardElement.classList.remove('hidden');
+                    reiniciarCanvas(idContainer, idCanvas);
                     document.getElementById(idContainer).style.height = `${Math.max(labelsFiltradas.length * 35, 110)}px`;
                     const ctx = document.getElementById(idCanvas).getContext('2d');
                     chartsInstance[idCanvas] = new Chart(ctx, {
